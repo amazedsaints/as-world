@@ -304,7 +304,7 @@ a.glass-card:hover { transform: translateY(-4px); border-color: rgba(255, 255, 2
 .chapter img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s cubic-bezier(.2, .7, .2, 1); }
 .chapter:hover img { transform: scale(1.07); }
 .chapter::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(5, 6, 9, .95) 6%, rgba(5, 6, 9, .2) 50%, transparent 70%); }
-.chapter > div {
+.chapter > div:not(.poster-art) {
   position: absolute; z-index: 1; left: 12px; right: 12px; bottom: 12px;
   padding: 14px 16px; border-radius: 12px;
   background: linear-gradient(135deg, rgba(255, 255, 255, .14), rgba(255, 255, 255, .04));
@@ -333,6 +333,21 @@ a.glass-card:hover { transform: translateY(-4px); border-color: rgba(255, 255, 2
 .launcher.fire { border-color: #ffd98a; box-shadow: 0 0 34px rgba(255, 190, 90, .5); }
 .launcher.fire img { animation: recoil .5s cubic-bezier(.2, .8, .3, 1); }
 @keyframes recoil { 0% { transform: none; } 12% { transform: translate(var(--kx, -6px), var(--ky, 5px)) scale(.96); } 100% { transform: none; } }
+/* the cannon under the game pictures: tap a picture and it fires at it */
+.reel-fire { margin-top: clamp(22px, 4vh, 40px); display: flex; align-items: center; justify-content: center; gap: 18px; }
+.reel-fire li { list-style: none; }
+.reel-cannon { width: clamp(76px, 7vw, 104px); flex: 0 0 auto; }
+.reel-fire p { font-size: 10px; letter-spacing: .32em; text-transform: uppercase; color: var(--muted); line-height: 1.9; text-align: left; }
+.reel-fire strong { display: block; font: 400 26px/1 var(--serif); letter-spacing: .06em; color: var(--gold); }
+.phone { cursor: crosshair; }
+.phone.hit img { animation: phone-hit .65s cubic-bezier(.3, .7, .3, 1); }
+@keyframes phone-hit {
+  0% { transform: none; filter: none; }
+  12% { transform: translate(var(--px, 6px), -10px) rotate(var(--tilt, 2deg)) scale(1.03); filter: brightness(1.35); }
+  35% { transform: translate(calc(var(--px, 6px) * -.6), 4px) rotate(calc(var(--tilt, 2deg) * -.6)); filter: none; }
+  60% { transform: translate(calc(var(--px, 6px) * .3), -2px) rotate(calc(var(--tilt, 2deg) * .3)); }
+  100% { transform: none; }
+}
 /* cannonballs, flashes and smoke are drawn over the page */
 .fx { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 25; pointer-events: none; }
 /* a world card that takes a hit */
@@ -362,6 +377,13 @@ a.glass-card:hover { transform: translateY(-4px); border-color: rgba(255, 255, 2
 .poster:nth-child(3) .poster-art { animation-duration: 21s; }
 .poster:nth-child(4) .poster-art { animation-duration: 33s; animation-direction: alternate-reverse; }
 .poster-art img { transition: none; transform: none !important; }
+/* explicit layers: picture and effects, then the dark fade, then the label */
+.poster-art { z-index: 0; }
+.chapter::after, .poster::after { z-index: 1; }
+.chapter > div:not(.poster-art), .poster span { z-index: 2; }
+.chapter .poster-art { animation-duration: 26s; }
+.chapter:nth-child(even) .poster-art { animation-duration: 31s; animation-direction: alternate-reverse; }
+.chapter .poster-fx { mix-blend-mode: normal; }
 .poster-fx { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; mix-blend-mode: screen; }
 @keyframes poster-drift { from { transform: scale(1.05) translate(-1.2%, -1%); } to { transform: scale(1.14) translate(1.4%, 1.6%); } }
 .poster::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(5, 6, 9, .92) 8%, transparent 55%); }
@@ -373,9 +395,26 @@ a.glass-card:hover { transform: translateY(-4px); border-color: rgba(255, 255, 2
 /* ---------- studio ---------- */
 .studio { position: relative; overflow: hidden; padding: clamp(110px, 20vh, 220px) var(--gutter); }
 .studio-bg, .studio-bg img { position: absolute; inset: 0; width: 100%; height: 100%; }
-.studio-bg img { object-fit: cover; object-position: 50% 40%; filter: brightness(.62) saturate(1.1); transform: scale(1.04); }
+.studio-bg img { object-fit: cover; filter: brightness(.7) saturate(1.15); }
 .studio-bg::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(7, 8, 11, .92) 0%, rgba(7, 8, 11, .55) 48%, rgba(7, 8, 11, .1) 100%), linear-gradient(0deg, var(--bg) 0%, transparent 22%, transparent 78%, var(--bg) 100%); }
-.studio-copy { position: relative; max-width: 640px; }
+.studio-bg::after { z-index: 1; }
+.studio-bg .poster-art { animation-duration: 30s; }
+.studio-bg .poster-fx { mix-blend-mode: screen; }
+.studio-copy { position: relative; z-index: 2; max-width: 640px; }
+/* the studio name: letters that jump and light up when a cannonball hits them */
+.studio-name { font-size: clamp(34px, 6vw, 86px); white-space: nowrap; }
+.letter { display: inline-block; transition: color 1.2s ease; cursor: crosshair; }
+.letter.hit { animation: letter-hit .75s cubic-bezier(.3, .7, .3, 1); }
+@keyframes letter-hit {
+  0% { transform: none; }
+  18% { transform: translateY(-.42em) rotate(var(--tilt, 8deg)) scale(1.2); text-shadow: 0 0 30px currentColor; }
+  45% { transform: translateY(.07em) rotate(calc(var(--tilt, 8deg) * -.4)) scale(.97); }
+  70% { transform: translateY(-.05em); }
+  100% { transform: none; }
+}
+.studio-fire { margin-top: 34px; display: flex; align-items: center; gap: 16px; }
+.studio-cannon { width: clamp(72px, 6.5vw, 96px); flex: 0 0 auto; }
+.studio-fire p { margin: 0; font-size: 10px; letter-spacing: .32em; text-transform: uppercase; color: var(--muted); line-height: 1.9; }
 .studio-copy > p:not(.eyebrow) { margin-top: 22px; color: #cfc8bc; font-size: clamp(16px, 1.3vw, 19px); }
 
 /* ---------- contact ---------- */
@@ -443,7 +482,8 @@ a.glass-card:hover { transform: translateY(-4px); border-color: rgba(255, 255, 2
   *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0s !important; transition-duration: .01ms !important; }
   .intro { display: none; }
   .hero-copy, .credits, .scroll-cue, .glass-row { opacity: 1; }
-  .fx { display: none; }
+  .fx, .reel-fire, .studio-fire { display: none; }
+  .phone { cursor: default; }
   .hero-scroll { height: auto; }
   .hero { position: relative; }
   .fly { display: none; }

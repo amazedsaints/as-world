@@ -20,7 +20,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Playfair+Display:ital,wght@1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="/assets/fly/tall/000.webp" media="(max-aspect-ratio: 1/1)">
 <link rel="preload" as="image" href="/assets/fly/wide/000.webp" media="(min-aspect-ratio: 1/1)">
-<link rel="stylesheet" href="/assets/site.css?v=20261127g">
+<link rel="stylesheet" href="/assets/site.css?v=20261127j">
 <script>try{if(sessionStorage.getItem("as-intro"))document.documentElement.className+=" seen";sessionStorage.setItem("as-intro","1")}catch(e){}</script>
 </head>
 <body>
@@ -102,10 +102,16 @@
         <div><dt>0</dt><dd>ads, ever</dd></div>
       </dl>
     </div>
+    <div class="reel-wrap">
     <div class="reel" aria-label="Scenes from the game">
       <figure class="phone reveal" data-depth="0.06"><img loading="lazy" src="/assets/img/shot-kitchen.webp" alt="Copper pots and pans flying through a kitchen shop"><figcaption>Kitchen Shop</figcaption></figure>
       <figure class="phone phone-lift reveal" data-depth="-0.05"><img loading="lazy" src="/assets/img/shot-ginger.webp" alt="Gingerbread houses breaking apart in a snowy alpine village"><figcaption>Gingerbread Village</figcaption></figure>
       <figure class="phone reveal" data-depth="0.08"><img loading="lazy" src="/assets/img/shot-lighthouse.webp" alt="A brick lighthouse on a rocky island by the sea"><figcaption>Brick Lighthouse</figcaption></figure>
+    </div>
+    <div class="reel-fire reveal">
+      <button type="button" class="launcher reel-cannon" data-m="72,25" data-d="0.84,-0.54" aria-label="Fire at a picture"><img loading="lazy" src="/assets/img/launcher-field_gun.webp" alt="" width="104" height="104"></button>
+      <p>Tap a picture to fire<strong class="score" aria-live="polite">0</strong></p>
+    </div>
     </div>
   </section>
 
@@ -120,14 +126,14 @@
       </div>
     </div>
     <div class="strip" tabindex="0" aria-label="The eight worlds of Topplonium">
-      <article class="chapter"><img loading="lazy" src="/assets/img/world-toytown.webp" alt=""><div><small>Chapter 01</small><h3>Toy Town</h3><p>Blocks, balloons and a first taste of the cannon.</p></div></article>
-      <article class="chapter"><img loading="lazy" src="/assets/img/world-bricks.webp" alt=""><div><small>Chapter 02</small><h3>Brick Kingdom</h3><p>Castles, lighthouses and a rocket on the launch pad.</p></div></article>
-      <article class="chapter"><img loading="lazy" src="/assets/img/world-golden.webp" alt=""><div><small>Chapter 03</small><h3>Golden Hills</h3><p>Barns, haystacks and honey on a long autumn afternoon.</p></div></article>
-      <article class="chapter"><img loading="lazy" src="/assets/img/world-sweet.webp" alt=""><div><small>Chapter 04</small><h3>Sweet Clouds</h3><p>Macarons, donuts and a candy castle above the clouds.</p></div></article>
-      <article class="chapter"><img loading="lazy" src="/assets/img/world-main.webp" alt=""><div><small>Chapter 05</small><h3>Main Street</h3><p>Every shop in town, from the toy store to the grand department store.</p></div></article>
-      <article class="chapter"><img loading="lazy" src="/assets/img/world-crystal.webp" alt=""><div><small>Chapter 06</small><h3>Crystal Caverns</h3><p>Ice sculptures, frosted glass and lanterns in the dark.</p></div></article>
-      <article class="chapter chapter-soon"><img loading="lazy" src="/assets/img/world-iron.webp" alt=""><div><small>Chapter 07</small><h3>Iron Works</h3><p>In the forge.</p></div></article>
-      <article class="chapter chapter-soon"><img loading="lazy" src="/assets/img/world-summit.webp" alt=""><div><small>Chapter 08</small><h3>Starlight Summit</h3><p>The final climb.</p></div></article>
+      <article class="chapter" data-fx="toy"><img loading="lazy" src="/assets/img/world-toytown.webp" alt=""><div><small>Chapter 01</small><h3>Toy Town</h3><p>Blocks, balloons and a first taste of the cannon.</p></div></article>
+      <article class="chapter" data-fx="bricks"><img loading="lazy" src="/assets/img/world-bricks.webp" alt=""><div><small>Chapter 02</small><h3>Brick Kingdom</h3><p>Castles, lighthouses and a rocket on the launch pad.</p></div></article>
+      <article class="chapter" data-fx="leaves"><img loading="lazy" src="/assets/img/world-golden.webp" alt=""><div><small>Chapter 03</small><h3>Golden Hills</h3><p>Barns, haystacks and honey on a long autumn afternoon.</p></div></article>
+      <article class="chapter" data-fx="sugar"><img loading="lazy" src="/assets/img/world-sweet.webp" alt=""><div><small>Chapter 04</small><h3>Sweet Clouds</h3><p>Macarons, donuts and a candy castle above the clouds.</p></div></article>
+      <article class="chapter" data-fx="street"><img loading="lazy" src="/assets/img/world-main.webp" alt=""><div><small>Chapter 05</small><h3>Main Street</h3><p>Every shop in town, from the toy store to the grand department store.</p></div></article>
+      <article class="chapter" data-fx="crystal"><img loading="lazy" src="/assets/img/world-crystal.webp" alt=""><div><small>Chapter 06</small><h3>Crystal Caverns</h3><p>Ice sculptures, frosted glass and lanterns in the dark.</p></div></article>
+      <article class="chapter chapter-soon" data-fx="embers"><img loading="lazy" src="/assets/img/world-iron.webp" alt=""><div><small>Chapter 07</small><h3>Iron Works</h3><p>In the forge.</p></div></article>
+      <article class="chapter chapter-soon" data-fx="fireworks"><img loading="lazy" src="/assets/img/world-summit.webp" alt=""><div><small>Chapter 08</small><h3>Starlight Summit</h3><p>The final climb.</p></div></article>
     </div>
     <div class="launchers reveal">
       <p class="eyebrow">A launcher for every world <span class="hint">· tap one to fire</span></p>
@@ -172,11 +178,15 @@
 
   <!-- STUDIO -->
   <section class="studio" id="studio">
-    <div class="studio-bg" aria-hidden="true"><img loading="lazy" src="/assets/img/studio-icehall.webp" alt=""></div>
+    <div class="studio-bg" aria-hidden="true" data-fx="snow"><img loading="lazy" src="/assets/img/studio-icehall.webp" alt=""></div>
     <div class="studio-copy reveal">
       <p class="eyebrow">The studio</p>
-      <h2>Amazedsaints</h2>
+      <h2 class="studio-name" aria-label="Amazedsaints">Amazedsaints</h2>
       <p>An independent game studio. We build worlds by hand, sweat the small things, and keep our games free of ads and tracking. Topplonium is the first, and three more ideas are already on the workbench.</p>
+      <div class="studio-fire">
+        <button type="button" class="launcher studio-cannon" data-m="77,24" data-d="0.81,-0.59" aria-label="Fire at the studio name"><img loading="lazy" src="/assets/img/launcher-ice_cannon.webp" alt="" width="104" height="104"></button>
+        <p>Tap to fire<br>at our name</p>
+      </div>
     </div>
   </section>
 
@@ -201,7 +211,7 @@
 </footer>
 
 <audio class="music" src="/assets/audio/barn-door-sunday.mp3" preload="none" loop></audio>
-<script src="/assets/site.js?v=20261127g" defer></script>
-<script src="/assets/play.js?v=20261127g" defer></script>
+<script src="/assets/site.js?v=20261127j" defer></script>
+<script src="/assets/play.js?v=20261127j" defer></script>
 </body>
 </html>

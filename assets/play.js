@@ -7,11 +7,23 @@
 
   // ------------------------------------------------------------ cannons
   const fx = document.querySelector(".fx");
-  const launchers = [...document.querySelectorAll(".launcher")];
-  if (fx && launchers.length && !reduced) {
+  const launchers = [...document.querySelectorAll(".launchers .launcher")];
+  const reelCannon = document.querySelector(".reel-cannon");
+  const phones = [...document.querySelectorAll(".phone")];
+  const scoreEl = document.querySelector(".score");
+  const studioCannon = document.querySelector(".studio-cannon");
+  const studioName = document.querySelector(".studio-name");
+  let letters = [];
+  if (studioName && !reduced) {         // each letter of the studio name becomes a target
+    const text = studioName.textContent;
+    studioName.textContent = "";
+    letters = [...text].map(ch => { const sp = document.createElement("span"); sp.className = "letter"; sp.setAttribute("aria-hidden", "true"); sp.textContent = ch; studioName.appendChild(sp); return sp; });
+  }
+  if (fx && (launchers.length || reelCannon || studioCannon) && !reduced) {
     const ctx = fx.getContext("2d");
     let W = 0, H = 0, dpr = 1, running = false, last = 0;
-    const balls = [], puffs = [], sparks = [], flashes = [];
+    const balls = [], puffs = [], sparks = [], flashes = [], coins = [], pops = [];
+    let score = 0;
     const size = () => {
       dpr = Math.min(devicePixelRatio || 1, 2);
       W = innerWidth; H = innerHeight;
@@ -30,18 +42,28 @@
       a.play().catch(() => {});
     };
 
-    const fire = btn => {
+    // fire(btn): along the barrel. fire(btn, target): lobbed to land on the target.
+    const fire = (btn, target) => {
       const r = btn.getBoundingClientRect();
       if (r.bottom < 0 || r.top > H) return;
       const [mx, my] = btn.dataset.m.split(",").map(Number);
       let [dx, dy] = btn.dataset.d.split(",").map(Number);
       const x = r.left + r.width * mx / 100, y = r.top + r.height * my / 100;
-      // on a narrow screen the shot is lobbed steeper, so it reaches the
-      // world cards above before it runs out of screen
-      const narrow = W < 700;
-      if (narrow) { dx *= 0.42; const n = Math.hypot(dx, dy); dx /= n; dy /= n; }
-      const speed = narrow ? 640 : Math.min(1050, Math.max(620, W * 0.75));
-      balls.push({ x, y, vx: dx * speed, vy: dy * speed, g: speed * 0.62, r: Math.max(6, r.width * 0.1), life: 0, trail: [] });
+      if (target) {
+        const t = target.getBoundingClientRect();
+        const tx = t.left + t.width * rand(0.3, 0.7), ty = t.top + t.height * rand(0.45, 0.75);
+        const T = Math.min(0.8, Math.max(0.45, Math.hypot(tx - x, ty - y) / 900)), g = 900;
+        const vx = (tx - x) / T, vy = (ty - y) / T - 0.5 * g * T;
+        balls.push({ x, y, vx, vy, g, r: Math.max(7, r.width * 0.1), life: 0, trail: [], only: target, T });
+        const n = Math.hypot(vx, vy); dx = vx / n; dy = vy / n;
+      } else {
+        // on a narrow screen the shot is lobbed steeper, so it reaches the
+        // world cards above before it runs out of screen
+        const narrow = W < 700;
+        if (narrow) { dx *= 0.42; const n = Math.hypot(dx, dy); dx /= n; dy /= n; }
+        const speed = narrow ? 640 : Math.min(1050, Math.max(620, W * 0.75));
+        balls.push({ x, y, vx: dx * speed, vy: dy * speed, g: speed * 0.62, r: Math.max(6, r.width * 0.1), life: 0, trail: [] });
+      }
       flashes.push({ x, y, t: 0, r: r.width * 0.55 });
       for (let i = 0; i < 9; i++) {
         const s = rand(40, 220);
@@ -60,6 +82,29 @@
     };
 
     const hit = (card, b) => {
+      if (card.classList.contains("letter")) {      // a letter of the studio name: it jumps and lights up
+        const col = ["#FFB547", "#FF5E7E", "#B45CFF", "#3FB8FF", "#2EE6A8"][Math.floor(Math.random() * 5)];
+        card.style.setProperty("--tilt", `${rand(-14, 14)}deg`);
+        card.style.color = col;
+        clearTimeout(card._t); card._t = setTimeout(() => { card.style.color = ""; }, 1800);
+        card.classList.remove("hit"); void card.offsetWidth; card.classList.add("hit");
+        const rgb = col.match(/\w\w/g).map(h => parseInt(h, 16)).join(", ");
+        for (let i = 0; i < 18; i++) { const a = rand(0, 6.283), s = rand(80, 380); sparks.push({ x: b.x, y: b.y, vx: Math.cos(a) * s, vy: Math.sin(a) * s - 90, t: 0, life: rand(0.35, 0.8), c: rgb }); }
+        flashes.push({ x: b.x, y: b.y, t: 0, r: b.r * 5 });
+        boom(0.2, 1.9);
+        return;
+      }
+      if (card.classList.contains("phone")) {       // a game picture: it shakes and pays out
+        card.style.setProperty("--px", `${(b.vx > 0 ? 1 : -1) * rand(5, 9)}px`);
+        for (let i = 0; i < 12; i++) {
+          const a = rand(-2.6, -0.5), s = rand(180, 460);
+          coins.push({ x: b.x, y: b.y, vx: Math.cos(a) * s, vy: Math.sin(a) * s, t: 0, life: rand(0.9, 1.4), r: rand(4, 6.5), spin: rand(0, 6.28) });
+        }
+        const gain = 100;
+        score += gain;
+        pops.push({ x: b.x, y: b.y - 10, t: 0, text: `+${gain}` });
+        if (scoreEl) scoreEl.textContent = score.toLocaleString("en-US");
+      }
       card.style.setProperty("--tilt", `${(b.vx > 0 ? 1 : -1) * rand(1.5, 3)}deg`);
       card.classList.remove("hit"); void card.offsetWidth; card.classList.add("hit");
       for (let i = 0; i < 16; i++) {
@@ -80,7 +125,9 @@
         b.life += dt; b.vy += b.g * dt; b.x += b.vx * dt; b.y += b.vy * dt;
         b.trail.push([b.x, b.y]); if (b.trail.length > 10) b.trail.shift();
         let gone = b.y > H + 60 || b.x > W + 60 || b.x < -60;
-        if (!gone && b.life > 0.06) {
+        if (!gone && b.only) {               // an aimed shot flies on to its mark
+          if (b.life >= b.T) { hit(b.only, b); gone = true; }
+        } else if (!gone && b.life > 0.06) {  // a free shot bursts on the first world card it touches
           for (const [card, r] of cards) {
             if (b.x > r.left && b.x < r.right && b.y > r.top && b.y < r.bottom) { hit(card, b); gone = true; break; }
           }
@@ -120,7 +167,28 @@
         s.vy += 500 * dt; s.x += s.vx * dt; s.y += s.vy * dt;
         ctx.beginPath(); ctx.fillStyle = `rgba(${s.c}, ${1 - k})`; ctx.arc(s.x, s.y, 1.8 * (1 - k * 0.5), 0, 6.283); ctx.fill();
       }
-      if (balls.length || puffs.length || sparks.length || flashes.length) requestAnimationFrame(loop);
+      for (let i = coins.length - 1; i >= 0; i--) {
+        const q = coins[i]; q.t += dt;
+        const k = q.t / q.life;
+        if (k >= 1) { coins.splice(i, 1); continue; }
+        q.vy += 900 * dt; q.x += q.vx * dt; q.y += q.vy * dt; q.spin += dt * 9;
+        const sx = Math.abs(Math.cos(q.spin)) * 0.75 + 0.25, al = k > 0.7 ? (1 - k) / 0.3 : 1;
+        ctx.save(); ctx.translate(q.x, q.y); ctx.scale(sx, 1);
+        ctx.beginPath(); ctx.fillStyle = `rgba(255, 196, 46, ${al})`; ctx.arc(0, 0, q.r, 0, 6.283); ctx.fill();
+        ctx.beginPath(); ctx.fillStyle = `rgba(255, 236, 150, ${al})`; ctx.arc(-q.r * 0.2, -q.r * 0.25, q.r * 0.55, 0, 6.283); ctx.fill();
+        ctx.lineWidth = 1; ctx.strokeStyle = `rgba(160, 100, 10, ${al * 0.8})`; ctx.beginPath(); ctx.arc(0, 0, q.r, 0, 6.283); ctx.stroke();
+        ctx.restore();
+      }
+      for (let i = pops.length - 1; i >= 0; i--) {
+        const q = pops[i]; q.t += dt;
+        const k = q.t / 1.1;
+        if (k >= 1) { pops.splice(i, 1); continue; }
+        ctx.font = `600 ${Math.round(22 + 8 * Math.min(1, k * 4))}px Inter, system-ui, sans-serif`;
+        ctx.textAlign = "center";
+        ctx.lineWidth = 4; ctx.strokeStyle = `rgba(20, 12, 4, ${(1 - k) * 0.8})`; ctx.strokeText(q.text, q.x, q.y - k * 60);
+        ctx.fillStyle = `rgba(255, 214, 110, ${1 - k})`; ctx.fillText(q.text, q.x, q.y - k * 60);
+      }
+      if (balls.length || puffs.length || sparks.length || flashes.length || coins.length || pops.length) requestAnimationFrame(loop);
       else { running = false; ctx.clearRect(0, 0, W, H); }
     };
 
@@ -128,6 +196,29 @@
       b.addEventListener("click", () => fire(b));
       b.addEventListener("animationend", () => b.classList.remove("fire"));
     });
+
+    // The studio name: the ice cannon picks off its letters; tap a letter to aim.
+    if (studioCannon && letters.length) {
+      const shootName = l => fire(studioCannon, l || letters[Math.floor(Math.random() * letters.length)]);
+      letters.forEach(l => l.addEventListener("click", () => shootName(l)));
+      studioCannon.addEventListener("click", () => shootName());
+      studioCannon.addEventListener("animationend", () => studioCannon.classList.remove("fire"));
+      let st = null, sOn = false;
+      const sAuto = () => { if (!sOn || document.hidden) return; shootName(); st = setTimeout(sAuto, rand(1300, 2400)); };
+      new IntersectionObserver(([e]) => { sOn = e.isIntersecting; clearTimeout(st); if (sOn) st = setTimeout(sAuto, 900); }, { threshold: 0.8 }).observe(studioCannon);
+    }
+
+    // The game pictures: tap one and the cannon under them fires at it.
+    if (reelCannon && phones.length) {
+      const visible = () => phones.filter(ph => { const r = ph.getBoundingClientRect(); return r.right > 20 && r.left < W - 20 && r.bottom > 0 && r.top < H; });
+      const shoot = ph => fire(reelCannon, ph || visible()[Math.floor(Math.random() * visible().length)] || phones[0]);
+      phones.forEach(ph => ph.addEventListener("click", () => shoot(ph)));
+      reelCannon.addEventListener("click", () => shoot());
+      reelCannon.addEventListener("animationend", () => reelCannon.classList.remove("fire"));
+      let rt = null, on = false;
+      const auto = () => { if (!on || document.hidden) return; shoot(); rt = setTimeout(auto, rand(2200, 3600)); };
+      new IntersectionObserver(([e]) => { on = e.isIntersecting; clearTimeout(rt); if (on) rt = setTimeout(auto, 1200); }, { threshold: 0.8 }).observe(reelCannon);
+    }
     // They also fire by themselves, one after another, while the row is on screen.
     let timer = null, order = [], inView = false;
     const next = () => {
@@ -144,7 +235,7 @@
   }
 
   // ------------------------------------------------------------ posters
-  const posters = [...document.querySelectorAll(".poster[data-fx]")];
+  const posters = [...document.querySelectorAll(".poster[data-fx], .chapter[data-fx], .studio-bg[data-fx]")];
   if (posters.length && !reduced) {
     const live = new Set();
     const setups = posters.map(el => {
@@ -173,7 +264,7 @@
     });
 
     const seed = o => {
-      const n = { motes: 34, beam: 46, paper: 16, seeds: 30 }[o.kind];
+      const n = { motes: 34, beam: 46, paper: 16, seeds: 30, snow: 70, toy: 22, bricks: 10, leaves: 22, sugar: 30, street: 16, crystal: 26, embers: 34, fireworks: 0 }[o.kind];
       o.parts = Array.from({ length: n }, () => ({ x: Math.random(), y: Math.random(), a: Math.random() * 6.28, s: rand(0.5, 1.5), k: Math.random() }));
       o.stars = Array.from({ length: 26 }, () => ({ x: Math.random(), y: Math.random() * 0.7, a: Math.random() * 6.28, s: rand(0.6, 1.6) }));
     };
@@ -232,6 +323,105 @@
           const fade = Math.min(1, (p.y - 0.05) * 6) * Math.min(1, (0.75 - p.y) * 6);
           glow(c, p.x * w, p.y * h, 3 + p.s * 3.5, cols[i % 4], Math.max(0, fade) * (0.55 + 0.3 * Math.sin(p.a * 2.3)));
         });
+      } else if (o.kind === "snow") {      // snow drifts through the ice hall, the lantern glows and sways
+        const [lx, ly] = o.at(0.502 + Math.sin(o.t * 0.9) * 0.004, 0.6);
+        glow(c, lx, ly, h * (0.2 + 0.03 * Math.sin(o.t * 2.3)), "255, 200, 120", 0.5);
+        glow(c, lx, ly, h * 0.06, "255, 236, 190", 0.8);
+        for (const p of o.parts) {
+          p.a += dt * p.s; p.y += dt * (0.03 + 0.035 * p.s); p.x += Math.sin(p.a) * 0.0007 + dt * 0.006;
+          if (p.y > 1.03) { p.y = -0.03; p.x = Math.random(); }
+          glow(c, p.x * w, p.y * h, 1.5 + p.s * 2.6, "235, 242, 255", 0.35 + 0.3 * p.k);
+        }
+      } else if (o.kind === "toy") {       // bubbles float up, confetti tumbles down
+        const cols = ["255, 90, 120", "255, 200, 60", "80, 200, 255", "140, 230, 120", "190, 120, 255"];
+        o.parts.forEach((p, i) => {
+          p.a += dt * (1 + p.s);
+          if (i % 2) {
+            p.y -= dt * 0.05 * p.s; p.x += Math.sin(p.a) * 0.0012;
+            if (p.y < -0.05) { p.y = 1.05; p.x = Math.random(); }
+            const r = 3 + p.s * 4;
+            c.beginPath(); c.strokeStyle = "rgba(255, 255, 255, 0.55)"; c.lineWidth = 1.2; c.arc(p.x * w, p.y * h, r, 0, 6.283); c.stroke();
+            glow(c, p.x * w - r * 0.3, p.y * h - r * 0.3, r * 0.6, "255, 255, 255", 0.6);
+          } else {
+            p.y += dt * 0.06 * p.s; p.x += Math.sin(p.a * 0.7) * 0.0015;
+            if (p.y > 1.05) { p.y = -0.05; p.x = Math.random(); }
+            c.save(); c.translate(p.x * w, p.y * h); c.rotate(p.a); c.scale(1, Math.cos(p.a * 2.1));
+            c.fillStyle = `rgba(${cols[i % 5]}, 0.9)`; c.fillRect(-3.5, -2, 7, 4); c.restore();
+          }
+        });
+      } else if (o.kind === "bricks") {    // the sun's rays turn, the train puffs, the water glints
+        const [sx, sy] = o.at(0.105, 0.055), [tx, ty] = o.at(0.7, 0.6);
+        c.save(); c.translate(sx, sy); c.rotate(o.t * 0.25);
+        for (let i = 0; i < 12; i++) {
+          c.rotate(6.283 / 12);
+          const g = c.createLinearGradient(0, 0, w * 0.34, 0);
+          g.addColorStop(0, "rgba(255, 236, 130, 0.5)"); g.addColorStop(1, "rgba(255, 236, 130, 0)");
+          c.beginPath(); c.moveTo(0, 0); c.lineTo(w * 0.34, -w * 0.022); c.lineTo(w * 0.34, w * 0.022); c.closePath(); c.fillStyle = g; c.fill();
+        }
+        c.restore();
+        o.parts.forEach((p, i) => {
+          if (i < 5) {                     // steam puffs
+            p.k += dt * 0.35 * p.s; if (p.k > 1) p.k = 0;
+            glow(c, tx - p.k * w * 0.08 + Math.sin(p.a + p.k * 5) * 3, ty - p.k * h * 0.11, 5 + p.k * 16, "255, 255, 255", 0.55 * (1 - p.k));
+          } else {                         // glints on the lake
+            p.a += dt * 3 * p.s;
+            const [gx, gy] = o.at(0.3 + p.x * 0.5, 0.5 + p.y * 0.1);
+            glow(c, gx, gy, 2.5, "255, 255, 255", Math.max(0, Math.sin(p.a)) * 0.8);
+          }
+        });
+      } else if (o.kind === "leaves" || o.kind === "street") {   // autumn leaves drift down
+        const cols = ["230, 120, 30", "250, 180, 50", "200, 70, 30", "240, 150, 40"];
+        o.parts.forEach((p, i) => {
+          p.a += dt * (1 + p.s); p.y += dt * 0.055 * p.s; p.x += dt * 0.02 + Math.sin(p.a * 0.8) * 0.0018;
+          if (p.y > 1.05 || p.x > 1.08) { p.y = -0.05; p.x = Math.random() * 1.1 - 0.1; }
+          if (o.kind === "street" && i % 3 === 0) {              // warm glints in the shop windows
+            const [gx, gy] = o.at(0.12 + p.k * 0.8, 0.25 + ((i * 37) % 60) / 100);
+            glow(c, gx, gy, 7, "255, 214, 130", Math.max(0, Math.sin(p.a * 0.9)) * 0.55);
+            return;
+          }
+          const sz = 3.5 + p.s * 2.5;
+          c.save(); c.translate(p.x * w, p.y * h); c.rotate(p.a); c.scale(1, 0.45 + 0.55 * Math.abs(Math.cos(p.a * 1.3)));
+          c.fillStyle = `rgba(${cols[i % 4]}, 0.9)`; c.beginPath(); c.ellipse(0, 0, sz * 1.5, sz * 0.7, 0, 0, 6.283); c.fill(); c.restore();
+        });
+        if (o.kind === "leaves") for (const s of o.stars) { s.a += dt * s.s; s.y -= dt * 0.012; if (s.y < 0) s.y = 0.7; glow(c, s.x * w, (0.3 + s.y) * h, 2 + s.s, "255, 214, 140", 0.25 + 0.25 * Math.sin(s.a * 2)); }
+      } else if (o.kind === "sugar" || o.kind === "crystal") {   // sparkles: sugar pink and gold, or icy white
+        const cols = o.kind === "sugar" ? ["255, 255, 255", "255, 190, 220", "255, 230, 150"] : ["255, 255, 255", "170, 220, 255", "200, 170, 255"];
+        if (o.kind === "crystal") {                                // soft light moving across the ice
+          const x = ((o.t * 0.06) % 1.6 - 0.3) * w;
+          const g = c.createLinearGradient(x, 0, x + w * 0.5, h);
+          g.addColorStop(0, "rgba(160, 210, 255, 0)"); g.addColorStop(0.5, "rgba(160, 210, 255, 0.2)"); g.addColorStop(1, "rgba(160, 210, 255, 0)");
+          c.fillStyle = g; c.fillRect(0, 0, w, h);
+        }
+        o.parts.forEach((p, i) => {
+          p.a += dt * (1.2 + p.s * 1.5);
+          const a = Math.max(0, Math.sin(p.a));
+          if (a < 0.02 && Math.random() < 0.02) { p.x = Math.random(); p.y = Math.random() * 0.8; }
+          const x = p.x * w, y = p.y * h, r = (3 + p.s * 4) * a;
+          c.strokeStyle = `rgba(${cols[i % 3]}, ${a})`; c.lineWidth = 1.2;
+          c.beginPath(); c.moveTo(x - r, y); c.lineTo(x + r, y); c.moveTo(x, y - r); c.lineTo(x, y + r); c.stroke();
+          glow(c, x, y, r * 1.2, cols[i % 3], a * 0.5);
+        });
+      } else if (o.kind === "embers") {    // sparks rise from the forge
+        for (const p of o.parts) {
+          p.a += dt * p.s * 2; p.y -= dt * (0.1 + 0.08 * p.s); p.x += Math.sin(p.a) * 0.002 + dt * 0.01;
+          if (p.y < -0.03) { p.y = rand(0.5, 1.05); p.x = Math.random(); }
+          glow(c, p.x * w, p.y * h, 1.5 + p.s * 1.8, p.k > 0.5 ? "255, 150, 50" : "255, 210, 110", Math.min(1, p.y * 2.2) * (0.6 + 0.4 * Math.sin(p.a * 3)));
+        }
+      } else if (o.kind === "fireworks") { // stars twinkle, rockets burst over the summit
+        for (const s of o.stars) { s.a += dt * s.s * 2; glow(c, s.x * w, s.y * h * 0.8, 1.4 + s.s, "255, 255, 255", 0.2 + 0.5 * Math.max(0, Math.sin(s.a))); }
+        o.next = (o.next ?? 0.5) - dt;
+        if (o.next <= 0) {
+          o.next = rand(0.8, 1.9);
+          const cx = rand(0.15, 0.85), cy = rand(0.08, 0.36), col = ["255, 120, 150", "255, 215, 110", "130, 210, 255", "190, 150, 255", "140, 255, 190"][Math.floor(Math.random() * 5)];
+          for (let i = 0; i < 26; i++) { const a = (i / 26) * 6.283 + rand(-0.1, 0.1), v = rand(0.07, 0.16); o.parts.push({ x: cx, y: cy, vx: Math.cos(a) * v, vy: Math.sin(a) * v * (w / h), t: 0, life: rand(0.9, 1.5), col }); }
+        }
+        for (let i = o.parts.length - 1; i >= 0; i--) {
+          const p = o.parts[i]; p.t += dt;
+          const k = p.t / p.life;
+          if (k >= 1) { o.parts.splice(i, 1); continue; }
+          p.vx *= 0.975; p.vy = p.vy * 0.975 + dt * 0.03; p.x += p.vx * dt; p.y += p.vy * dt;
+          glow(c, p.x * w, p.y * h, 2.6 * (1 - k * 0.5), p.col, 1 - k);
+        }
       }
     };
 
@@ -251,7 +441,7 @@
 
     // posters lean toward the pointer, like a card held in the hand
     if (matchMedia("(hover: hover)").matches) {
-      posters.forEach(el => {
+      posters.filter(el => el.classList.contains("poster")).forEach(el => {
         el.addEventListener("pointerenter", () => { el.style.transition = "transform .15s ease-out, border-color .35s"; });
         el.addEventListener("pointermove", e => {
           const r = el.getBoundingClientRect();
