@@ -4,11 +4,11 @@
   X-Frame-Options: DENY
   Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=()
 
-/assets/*
+/assets/img/*
+  Cache-Control: public, max-age=604800
+
+/assets/logo/*
+  Cache-Control: public, max-age=604800
+
+/assets/audio/*
   Cache-Control: public, max-age=2592000
-
-/assets/site.css
-  Cache-Control: public, max-age=3600
-
-/assets/site.js
-  Cache-Control: public, max-age=3600
