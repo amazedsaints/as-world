@@ -18,9 +18,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Playfair+Display:ital,wght@1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link rel="preload" as="image" href="/assets/img/hero-tall.webp" media="(max-aspect-ratio: 1/1)">
-<link rel="preload" as="image" href="/assets/img/hero-wide.webp" media="(min-aspect-ratio: 1/1)">
-<link rel="stylesheet" href="/assets/site.css?v=20261127b">
+<link rel="preload" as="image" href="/assets/fly/tall/000.webp" media="(max-aspect-ratio: 1/1)">
+<link rel="preload" as="image" href="/assets/fly/wide/000.webp" media="(min-aspect-ratio: 1/1)">
+<link rel="stylesheet" href="/assets/site.css?v=20261127d">
 <script>try{if(sessionStorage.getItem("as-intro"))document.documentElement.className+=" seen";sessionStorage.setItem("as-intro","1")}catch(e){}</script>
 </head>
 <body>
@@ -47,35 +47,54 @@
 
 <main id="top">
 
-  <!-- HERO -->
-  <section class="hero" aria-label="Topplonium">
+  <!-- HERO: scrolling flies the camera through the barn doors -->
+  <section class="hero-scroll" aria-label="Topplonium">
+  <div class="hero">
     <picture class="hero-bg">
-      <source media="(min-aspect-ratio: 1/1)" srcset="/assets/img/hero-wide.webp">
-      <img src="/assets/img/hero-tall.webp" alt="A red barn at golden hour, hay bales, a stack of split logs and an axe in a stump">
+      <source media="(min-aspect-ratio: 1/1)" srcset="/assets/fly/wide/000.webp">
+      <img src="/assets/fly/tall/000.webp" alt="A red barn at golden hour with hay bales, an apple cart and a stack of split logs" fetchpriority="high">
     </picture>
+    <canvas class="fly" aria-hidden="true"></canvas>
     <canvas class="motes" aria-hidden="true"></canvas>
     <div class="hero-shade" aria-hidden="true"></div>
     <div class="bar bar-top" aria-hidden="true"></div>
     <div class="bar bar-bottom" aria-hidden="true"></div>
 
+    <div class="hero-ui">
     <div class="hero-copy">
       <p class="eyebrow">Amazedsaints presents</p>
       <h1 class="title">Topplonium</h1>
-      <p class="tagline">Everything topples. Make it count.</p>
+      <p class="tagline">Everything <em>topples</em>. Make it count.</p>
       <div class="cta">
         <a class="btn btn-gold" href="#topplonium">See it in action</a>
-        <a class="btn btn-line" href="mailto:hello@amazedsaints.com?subject=Notify%20me%3A%20Topplonium%20launch&body=Please%20let%20me%20know%20when%20Topplonium%20is%20on%20Google%20Play.">Coming soon to Google Play</a>
       </div>
     </div>
-    <p class="credits">100 levels <span>·</span> 8 worlds <span>·</span> one cannon <span>·</span> no ads</p>
-    <a class="scroll-cue" href="#topplonium" aria-label="Scroll down"><span></span></a>
+
+    <div class="glass-row">
+      <a class="glass-card" href="#topplonium">
+        <span class="glass-play" aria-hidden="true">&#9654;</span>
+        <span><small>Enter</small>Walk through the doors</span>
+      </a>
+      <div class="glass-card glass-stat">
+        <strong>100</strong>
+        <span><small>Levels</small>8 worlds, one cannon</span>
+      </div>
+      <a class="glass-card" href="mailto:hello@amazedsaints.com?subject=Notify%20me%3A%20Topplonium%20launch&body=Please%20let%20me%20know%20when%20Topplonium%20is%20on%20Google%20Play.">
+        <span class="glass-play" aria-hidden="true">&#9733;</span>
+        <span><small>Coming soon</small>Google Play &middot; notify me</span>
+      </a>
+    </div>
+    <a class="scroll-cue" href="#topplonium" aria-label="Scroll down"><span></span><em>Descend</em></a>
+    </div>
+  </div>
   </section>
+  <div class="light-fade" aria-hidden="true"></div>
 
   <!-- THE GAME -->
   <section class="game" id="topplonium">
     <div class="game-copy reveal">
       <p class="eyebrow">The game</p>
-      <h2>Strategy,<br>not point and shoot</h2>
+      <h2>Strategy,<br><em>not</em> point and shoot</h2>
       <p>Every level hides a key move: a weak point, a shielded target, a chain reaction waiting for one push. Tap at whatever is nearest and you run out of shots. Find the move, and a single cannonball brings the whole display crashing down.</p>
       <dl class="stats">
         <div><dt>100</dt><dd>hand-built levels</dd></div>
@@ -94,7 +113,7 @@
   <section class="worlds" id="worlds">
     <div class="section-head reveal">
       <p class="eyebrow">Eight worlds</p>
-      <h2>Chapter by chapter,<br>each harder to bring down</h2>
+      <h2>Chapter by chapter,<br>each harder to bring <em>down</em></h2>
       <div class="strip-nav">
         <button type="button" class="strip-btn" data-dir="-1" aria-label="Previous worlds">&#8592;</button>
         <button type="button" class="strip-btn" data-dir="1" aria-label="Next worlds">&#8594;</button>
@@ -129,7 +148,7 @@
   <section class="work" id="work">
     <div class="section-head reveal">
       <p class="eyebrow">The work</p>
-      <h2>Projects</h2>
+      <h2>What we are <em>making</em></h2>
     </div>
     <div class="posters">
       <a class="poster reveal" href="#topplonium">
@@ -165,7 +184,7 @@
   <section class="contact" id="contact">
     <div class="reveal">
       <p class="eyebrow">Contact</p>
-      <h2>Say hello</h2>
+      <h2>Say <em>hello</em></h2>
       <a class="mail" href="mailto:hello@amazedsaints.com">hello@amazedsaints.com</a>
       <p class="contact-note">For press, partnerships, or to hear when Topplonium launches.</p>
       <a class="btn btn-gold" href="mailto:hello@amazedsaints.com?subject=Notify%20me%3A%20Topplonium%20launch&body=Please%20let%20me%20know%20when%20Topplonium%20is%20on%20Google%20Play.">Notify me at launch</a>
@@ -180,6 +199,6 @@
 </footer>
 
 <audio class="music" src="/assets/audio/barn-door-sunday.mp3" preload="none" loop></audio>
-<script src="/assets/site.js?v=20261127b" defer></script>
+<script src="/assets/site.js?v=20261127d" defer></script>
 </body>
 </html>

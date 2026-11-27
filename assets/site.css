@@ -110,7 +110,7 @@ h2 {
 
 /* a second visit in the same session skips the opening titles */
 .seen .intro { display: none; }
-.seen .hero-copy, .seen .credits, .seen .scroll-cue { animation-delay: .2s; }
+.seen .hero-copy, .seen .credits, .seen .scroll-cue, .seen .glass-row { animation-delay: .2s; }
 
 /* ---------- nav ---------- */
 .nav {
@@ -151,9 +151,11 @@ h2 {
 .eq i:nth-child(2) { animation-delay: -.3s !important; } .eq i:nth-child(3) { animation-delay: -.6s !important; } .eq i:nth-child(4) { animation-delay: -.15s !important; }
 @keyframes eq { from { height: 3px; } to { height: 12px; } }
 
-/* ---------- hero ---------- */
+/* ---------- hero: pinned while the scroll flies the camera in ---------- */
+.hero-scroll { position: relative; height: 320vh; }
 .hero {
-  position: relative;
+  position: sticky;
+  top: 0;
   height: 100vh;
   height: 100svh;
   min-height: 560px;
@@ -165,11 +167,12 @@ h2 {
 .hero-bg img {
   object-fit: cover;
   object-position: 50% 50%;
-  transform-origin: 62% 55%;
-  animation: kenburns 28s ease-out both;
   filter: saturate(1.08) contrast(1.05);
 }
-@keyframes kenburns { from { transform: scale(1.16); } to { transform: scale(1.02); } }
+.fly { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; opacity: 0; transition: opacity .6s ease; filter: saturate(1.08) contrast(1.05); }
+.fly.ready { opacity: 1; }
+.hero-ui { position: absolute; inset: 0; z-index: 4; display: flex; align-items: center; will-change: opacity, transform; }
+.light-fade { height: 55vh; margin-top: -1px; background: linear-gradient(180deg, #fff0d6 0%, #f3cf95 18%, #6b4a2a 55%, var(--bg) 100%); }
 .motes { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
 .hero-shade {
   position: absolute; inset: 0; z-index: 2;
@@ -197,9 +200,34 @@ h2 {
 }
 .tagline {
   margin-top: 18px;
-  font: italic 500 clamp(22px, 2.6vw, 38px)/1.2 var(--italic);
-  color: var(--gold);
+  font: 400 clamp(22px, 2.6vw, 38px)/1.2 var(--italic);
+  color: var(--ink);
 }
+.tagline em, h2 em { font-family: var(--italic); font-style: italic; font-weight: 500; color: var(--gold); text-transform: none; letter-spacing: 0; }
+h2 em { font-size: 1.06em; }
+
+/* frosted glass cards over the scene */
+.glass-row {
+  position: absolute; z-index: 4; right: var(--gutter); bottom: calc(var(--bar) + 24px);
+  display: flex; gap: 12px;
+  opacity: 0; animation: fade-in 1.2s ease 3.7s forwards;
+}
+.glass-card {
+  display: flex; align-items: center; gap: 12px;
+  min-width: 190px; padding: 13px 18px 13px 14px;
+  border-radius: 16px;
+  color: var(--ink); text-decoration: none; font: 500 13px/1.35 var(--sans);
+  background: linear-gradient(135deg, rgba(255, 255, 255, .18), rgba(255, 255, 255, .05));
+  border: 1px solid rgba(255, 255, 255, .24);
+  box-shadow: 0 12px 34px rgba(0, 0, 0, .28), inset 0 1px 0 rgba(255, 255, 255, .25);
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
+  backdrop-filter: blur(16px) saturate(150%);
+  transition: transform .4s, border-color .4s, background .4s;
+}
+a.glass-card:hover { transform: translateY(-4px); border-color: rgba(255, 255, 255, .45); background: linear-gradient(135deg, rgba(255, 255, 255, .26), rgba(255, 255, 255, .08)); }
+.glass-card small { display: block; margin-bottom: 3px; font-size: 9.5px; letter-spacing: .32em; text-transform: uppercase; color: var(--gold); }
+.glass-play { flex: 0 0 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; border: 1px solid rgba(255, 255, 255, .4); font-size: 12px; }
+.glass-stat strong { font: 400 34px/1 var(--serif); color: var(--gold); }
 .cta { margin-top: 38px; display: flex; flex-wrap: wrap; gap: 12px; }
 .credits {
   position: absolute; z-index: 4; left: 0; right: 0;
@@ -214,11 +242,12 @@ h2 {
 }
 .credits span { color: var(--gold); margin: 0 .5em; }
 .scroll-cue {
-  position: absolute; z-index: 4; right: var(--gutter); bottom: calc(var(--bar) + 16px);
+  position: absolute; z-index: 4; left: 50%; margin-left: -11px; bottom: calc(var(--bar) + 40px);
   width: 22px; height: 36px; border: 1px solid rgba(242, 237, 228, .45); border-radius: 12px;
   opacity: 0; animation: fade-in 1s ease 4.2s forwards;
 }
 .scroll-cue span { position: absolute; left: 50%; top: 7px; width: 2px; height: 7px; margin-left: -1px; background: var(--gold); animation: cue 1.8s ease-in-out infinite; }
+.scroll-cue em { position: absolute; top: 44px; left: 50%; transform: translateX(-50%); font: 500 9px/1 var(--sans); font-style: normal; letter-spacing: .4em; text-transform: uppercase; color: rgba(242, 237, 228, .7); white-space: nowrap; }
 @keyframes cue { 0% { transform: translateY(0); opacity: 1; } 70% { transform: translateY(12px); opacity: 0; } 100% { opacity: 0; } }
 
 /* ---------- the game ---------- */
@@ -275,7 +304,14 @@ h2 {
 .chapter img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s cubic-bezier(.2, .7, .2, 1); }
 .chapter:hover img { transform: scale(1.07); }
 .chapter::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(5, 6, 9, .95) 6%, rgba(5, 6, 9, .2) 50%, transparent 70%); }
-.chapter > div { position: absolute; z-index: 1; left: 20px; right: 20px; bottom: 20px; }
+.chapter > div {
+  position: absolute; z-index: 1; left: 12px; right: 12px; bottom: 12px;
+  padding: 14px 16px; border-radius: 12px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, .14), rgba(255, 255, 255, .04));
+  border: 1px solid rgba(255, 255, 255, .18);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  backdrop-filter: blur(14px) saturate(140%);
+}
 .chapter small { font-size: 10px; letter-spacing: .4em; text-transform: uppercase; color: var(--gold); }
 .chapter h3 { margin-top: 6px; font: 400 25px/1.1 var(--serif); letter-spacing: .04em; }
 .chapter p { margin-top: 8px; font-size: 13px; line-height: 1.5; color: var(--muted); }
@@ -343,8 +379,14 @@ h2 {
   .nav nav { display: none; }
   .sound-label { display: none; }
   .brand { font-size: 12px; letter-spacing: .34em; }
-  .hero { align-items: flex-end; }
-  .hero-copy { padding-bottom: calc(var(--bar) + 70px); }
+  .hero-ui { align-items: flex-end; }
+  .hero-copy { padding-bottom: calc(var(--bar) + 150px); }
+  .glass-row { left: var(--gutter); right: var(--gutter); bottom: calc(var(--bar) + 18px); gap: 8px; }
+  .glass-card { flex: 1 1 0; min-width: 0; padding: 10px; gap: 0; font-size: 11px; border-radius: 12px; flex-direction: column; align-items: flex-start; justify-content: center; }
+  .glass-play { display: none; }
+  .glass-stat { flex-direction: row; align-items: center; gap: 8px; }
+  .glass-stat strong { font-size: 24px; }
+  .glass-card small { font-size: 8.5px; letter-spacing: .24em; }
   .hero-shade { background: linear-gradient(0deg, rgba(7, 8, 11, .96) 8%, rgba(7, 8, 11, .55) 42%, rgba(7, 8, 11, 0) 70%), linear-gradient(180deg, rgba(7, 8, 11, .5), transparent 20%); }
   .hero-bg img { object-position: 50% 40%; }
   .cta .btn { flex: 1 1 100%; text-align: center; }
@@ -367,7 +409,10 @@ h2 {
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0s !important; transition-duration: .01ms !important; }
   .intro { display: none; }
-  .hero-copy, .credits, .scroll-cue { opacity: 1; }
+  .hero-copy, .credits, .scroll-cue, .glass-row { opacity: 1; }
+  .hero-scroll { height: auto; }
+  .hero { position: relative; }
+  .fly { display: none; }
   .reveal { opacity: 1; transform: none; }
   html { scroll-behavior: auto; }
 }

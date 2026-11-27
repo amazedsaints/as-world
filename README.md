@@ -10,6 +10,10 @@ Plain static files, no build step:
   `https://www.amazedsaints.com/privacy` in the Play Console)
 - `404.html`, `robots.txt`, `sitemap.xml`, `_headers` (Cloudflare Pages headers)
 - `assets/img/`: pictures from the game (WebP), `og.jpg` share image
+- `assets/fly/wide/` and `assets/fly/tall/`: the 96 frames of the hero
+  fly-through (the camera glides through the barn doors as you scroll),
+  made by `tools/flythrough.py` from the Golden Hills painting
+- `assets/logo/mark.png`: the logo (1024 px, transparent)
 - `assets/audio/barn-door-sunday.mp3`: the Golden Hills world track (made by
   the owner with Google Gemini); plays only when a visitor turns sound on
 
