@@ -383,7 +383,7 @@ a.glass-card:hover { transform: translateY(-4px); border-color: rgba(255, 255, 2
 /* explicit layers: picture and effects, then the dark fade, then the label */
 .poster-art { z-index: 0; }
 .chapter::after, .poster::after { z-index: 1; }
-.chapter > div:not(.poster-art), .poster span { z-index: 2; }
+.chapter > div:not(.poster-art), .posters .poster > span { z-index: 2; }
 .chapter .poster-art { animation-duration: 26s; }
 .chapter:nth-child(even) .poster-art { animation-duration: 31s; animation-direction: alternate-reverse; }
 .chapter .poster-fx { mix-blend-mode: normal; }
