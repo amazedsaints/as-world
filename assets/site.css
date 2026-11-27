@@ -129,8 +129,29 @@ h2 {
 }
 .nav.solid { background: rgba(7, 8, 11, .82); backdrop-filter: blur(10px); height: 58px; border-bottom: 1px solid var(--line); }
 .brand { display: inline-flex; align-items: center; gap: 12px; font: 500 13px/1 var(--serif); letter-spacing: .42em; text-decoration: none; margin-right: auto; text-transform: uppercase; }
-.brand-mark { width: 30px; height: 30px; }
-.brand-word b, .intro-studio b { font-weight: 600; background: linear-gradient(90deg, #FFB547, #FF5E7E 45%, #B45CFF 75%, #3FB8FF); -webkit-background-clip: text; background-clip: text; color: transparent; }
+/* the logo is alive: the ring turns slowly and glows, and spins once when
+   you point at it or tap it */
+.brand-mark {
+  width: 30px; height: 30px;
+  animation: mark-turn 16s linear infinite, mark-glow 4.5s ease-in-out infinite alternate;
+  transition: transform .9s cubic-bezier(.2, .8, .2, 1);
+}
+.brand:hover .brand-mark, .brand:active .brand-mark { transform: rotate(360deg) scale(1.2); }
+@keyframes mark-turn { to { rotate: 360deg; } }
+@keyframes mark-glow {
+  from { filter: drop-shadow(0 0 3px rgba(255, 181, 71, .45)); }
+  50% { filter: drop-shadow(0 0 7px rgba(180, 92, 255, .6)); }
+  to { filter: drop-shadow(0 0 5px rgba(63, 184, 255, .55)); }
+}
+/* the colours flow through "AMAZED" (the gradient repeats, so the loop has no seam) */
+.brand-word b, .intro-studio b {
+  font-weight: 600;
+  background: linear-gradient(90deg, #FFB547, #FF5E7E 12.5%, #B45CFF 25%, #3FB8FF 37.5%, #FFB547 50%, #FF5E7E 62.5%, #B45CFF 75%, #3FB8FF 87.5%, #FFB547) 0 0 / 200% 100%;
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  animation: word-flow 7s linear infinite;
+}
+@keyframes word-flow { to { background-position: 100% 0; } }
+.foot-brand img { animation: mark-turn 16s linear infinite; }
 .intro-mark { width: clamp(70px, 9vw, 110px); height: auto; margin: 0 auto 26px; opacity: 0; animation: mark-in 1.4s ease .1s forwards; }
 @keyframes mark-in { from { opacity: 0; transform: scale(.7) rotate(-40deg); } to { opacity: 1; transform: none; } }
 .foot-brand { display: inline-flex; align-items: center; gap: 10px; }
@@ -487,6 +508,7 @@ a.glass-card:hover { transform: translateY(-4px); border-color: rgba(255, 255, 2
   .intro { display: none; }
   .hero-copy, .credits, .scroll-cue, .glass-row { opacity: 1; }
   .fx, .reel-fire, .studio-fire { display: none; }
+  .brand-mark, .brand-word b, .intro-studio b, .foot-brand img { animation: none; }
   .phone { cursor: default; }
   .hero-scroll { height: auto; }
   .hero { position: relative; }
