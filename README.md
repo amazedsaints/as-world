@@ -16,8 +16,8 @@ Plain static files, no build step:
   fly-through (the camera glides through the barn doors as you scroll),
   made by `tools/flythrough.py` from the Golden Hills painting
 - `assets/logo/mark.png`: the logo (1024 px, transparent)
-- `assets/img/poster-lumen-keeper.webp`, `poster-paper-skies.webp`,
-  `poster-gravity-garden.webp`: concept paintings generated in the owner's
+- `assets/img/poster-lumen-keeper-v2.webp`, `poster-paper-skies-v2.webp`,
+  `poster-gravity-garden-v2.webp`: concept paintings generated in the owner's
   Canva account
 - `assets/audio/boom.mp3`: a cannon boom of our own (synthesized), heard
   only with sound on
@@ -45,3 +45,9 @@ python3 -m http.server 8080
 ```
 
 then open http://localhost:8080.
+
+## Changing a picture
+
+Images are cached by browsers for a week. When a picture changes, give the
+new file a new name (for example `-v2`, `-v3`) and update the link, so every
+visitor gets the new one at once.
