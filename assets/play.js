@@ -17,7 +17,17 @@
   if (studioName && !reduced) {         // each letter of the studio name becomes a target
     const text = studioName.textContent;
     studioName.textContent = "";
-    letters = [...text].map(ch => { const sp = document.createElement("span"); sp.className = "letter"; sp.setAttribute("aria-hidden", "true"); sp.textContent = ch; studioName.appendChild(sp); return sp; });
+    // each letter: a wrapper that jumps, a dark copy underneath for the solid
+    // edge and shadow (cheaper than a filter over the whole name), and the
+    // face that takes the paint. On phones the name breaks after "Amazed".
+    letters = [...text].map((ch, i) => {
+      const w = document.createElement("span"); w.className = "lw"; w.setAttribute("aria-hidden", "true");
+      const sh = document.createElement("span"); sh.className = "ls"; sh.textContent = ch;
+      const sp = document.createElement("span"); sp.className = "letter"; sp.textContent = ch;
+      w.append(sh, sp); studioName.appendChild(w);
+      if (i === 5) { const br = document.createElement("br"); br.className = "name-break"; studioName.appendChild(br); }
+      return sp;
+    });
   }
   if (fx && (launchers.length || reelCannon || studioCannon) && !reduced) {
     const ctx = fx.getContext("2d");
@@ -55,7 +65,22 @@
       l.style.backgroundPosition = [...all.map(x => `${x.x.toFixed(3)}em ${x.y.toFixed(3)}em`), "0 0"].join(", ");
       l.style.backgroundSize = [...all.map(x => `${x.w.toFixed(3)}em ${x.h.toFixed(3)}em`), "100% 100%"].join(", ");
     };
+    // On a computer, if frames slow down while paint is flying (measured in
+    // the loop below), the name falls back to a plain change of colour for
+    // the rest of the visit. Phones always get the full splash.
+    const canLite = matchMedia("(hover: hover) and (pointer: fine)").matches;
+    let lite = false, slowT = 0, slowN = 0;
     const splat = (l, col, px, py) => {
+      if (lite) {
+        const lr = l.getBoundingClientRect(), lf = parseFloat(getComputedStyle(l).fontSize) || 60;
+        const lw = lr.width / lf, lh = lr.height / lf;
+        l._splats = [{ layers: [
+          { img: "linear-gradient(180deg, rgba(255, 255, 255, .6), rgba(255, 255, 255, 0) 55%)", x: 0, y: 0, w: lw, h: lh },
+          { img: `linear-gradient(${col}, ${col})`, x: 0, y: 0, w: lw, h: lh },
+        ] }];
+        paintLayers(l);
+        return;
+      }
       const r = l.getBoundingClientRect(), fs = parseFloat(getComputedStyle(l).fontSize) || 60;
       const w = r.width / fs, h = r.height / fs;
       const cx = Math.min(w * 0.85, Math.max(w * 0.15, (px - r.left) / fs)), cy = Math.min(h * 0.8, Math.max(h * 0.2, (py - r.top) / fs));
@@ -146,17 +171,18 @@
 
     const hit = (card, b) => {
       if (card.classList.contains("letter")) {      // a letter of the studio name: paint splashes on it
-        card.style.setProperty("--tilt", `${rand(-14, 14)}deg`);
+        card.parentNode.style.setProperty("--tilt", `${rand(-14, 14)}deg`);
         // each hit is a new colour, splashed where the ball struck; the paint stays
         const cols = PAINT.filter(c2 => c2 !== card.dataset.col);
         const col = cols[Math.floor(Math.random() * cols.length)];
         card.dataset.col = col;
         splat(card, col, b.x, b.y);
-        card.classList.remove("hit"); void card.offsetWidth; card.classList.add("hit");
+        const lw = card.parentNode;
+        lw.classList.remove("hit"); void lw.offsetWidth; lw.classList.add("hit");
         studioName.classList.remove("shake"); void studioName.offsetWidth; studioName.classList.add("shake");
         const rgb = col.match(/\w\w/g).map(h => parseInt(h, 16)).join(", ");
         // paint drops fly off the letter and fall, a ring of colour spreads
-        for (let i = 0; i < 22; i++) { const a = rand(-3.0, -0.15), s = rand(120, 520); drops.push({ x: b.x, y: b.y, vx: Math.cos(a) * s, vy: Math.sin(a) * s, t: 0, life: rand(0.7, 1.3), r: rand(2.2, 5.5), c: rgb }); }
+        for (let i = 0; i < (lite ? 8 : 22); i++) { const a = rand(-3.0, -0.15), s = rand(120, 520); drops.push({ x: b.x, y: b.y, vx: Math.cos(a) * s, vy: Math.sin(a) * s, t: 0, life: rand(0.7, 1.3), r: rand(2.2, 5.5), c: rgb }); }
         for (let i = 0; i < 10; i++) { const a = rand(0, 6.283), s = rand(80, 300); sparks.push({ x: b.x, y: b.y, vx: Math.cos(a) * s, vy: Math.sin(a) * s - 90, t: 0, life: rand(0.3, 0.6), c: "255, 250, 235" }); }
         rings.push({ x: b.x, y: b.y, t: 0, r: card.getBoundingClientRect().height * 1.3, c: rgb });
         flashes.push({ x: b.x, y: b.y, t: 0, r: b.r * 4 });
@@ -186,7 +212,12 @@
     };
 
     const loop = now => {
-      const dt = Math.min(0.033, (now - (last || now)) / 1000); last = now;
+      const raw = (now - (last || now)) / 1000;
+      const dt = Math.min(0.033, raw); last = now;
+      if (canLite && !lite && drops.length && raw > 0) {      // watch the frame rate while paint flies
+        slowT += raw; slowN++;
+        if (slowN >= 45) { if (slowT / slowN > 0.04) lite = true; slowT = 0; slowN = 0; }
+      }
       ctx.clearRect(0, 0, W, H);
       const cards = balls.length ? [...document.querySelectorAll(".chapter")].map(c => [c, c.getBoundingClientRect()]).filter(([, r]) => r.bottom > 0 && r.top < H && r.right > 0 && r.left < W) : [];
       for (let i = balls.length - 1; i >= 0; i--) {
@@ -357,10 +388,25 @@
       o.stars = Array.from({ length: 26 }, () => ({ x: Math.random(), y: Math.random() * 0.7, a: Math.random() * 6.28, s: rand(0.6, 1.6) }));
     };
 
+    // A soft glow, drawn from a small picture made once per colour (building
+    // a gradient for every particle on every frame was the slow part).
+    const sprites = new Map();
+    const sprite = col => {
+      let s = sprites.get(col);
+      if (!s) {
+        s = document.createElement("canvas"); s.width = s.height = 64;
+        const x = s.getContext("2d"), g = x.createRadialGradient(32, 32, 0, 32, 32, 32);
+        g.addColorStop(0, `rgba(${col}, 1)`); g.addColorStop(1, `rgba(${col}, 0)`);
+        x.fillStyle = g; x.fillRect(0, 0, 64, 64);
+        sprites.set(col, s);
+      }
+      return s;
+    };
     const glow = (c, x, y, r, col, a) => {
-      const g = c.createRadialGradient(x, y, 0, x, y, r);
-      g.addColorStop(0, `rgba(${col}, ${a})`); g.addColorStop(1, `rgba(${col}, 0)`);
-      c.beginPath(); c.fillStyle = g; c.arc(x, y, r, 0, 6.283); c.fill();
+      if (!(a > 0.004) || !(r > 0)) return;
+      c.globalAlpha = Math.min(1, a);
+      c.drawImage(sprite(col), x - r, y - r, r * 2, r * 2);
+      c.globalAlpha = 1;
     };
 
     const draw = (o, dt) => {

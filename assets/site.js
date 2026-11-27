@@ -103,14 +103,34 @@
     brand.addEventListener("click", () => { sparkle(brandSpin, 16, 44); spinV += 260; if (!spinning) { spinning = true; requestAnimationFrame(spin); } });
   }
 
+  // A firework over the footer logo: a rocket climbs from the ring and bursts
+  // into the logo's colours.
+  const firework = ring => {
+    if (reduced || !ring) return;
+    const up = -(70 + Math.random() * 40);
+    const rk = document.createElement("i");
+    rk.className = "rocket"; rk.style.setProperty("--up", `${up}px`);
+    ring.appendChild(rk);
+    rk.addEventListener("animationend", () => {
+      rk.remove();
+      const b = document.createElement("i");
+      b.className = "burst"; b.style.transform = `translateY(${up}px)`;
+      ring.appendChild(b);
+      sparkle(b, 26, 52);
+      setTimeout(() => b.remove(), 1400);
+    });
+  };
+
   // The footer logo topples: a cannonball rolls in and knocks it into the
-  // air the first time it comes into view, and again on every tap.
+  // air the first time it comes into view, and again on every tap; once it
+  // has landed, a firework goes up from it.
   const foot = document.querySelector(".foot-brand");
   if (foot && !reduced) {
     const ring = foot.querySelector(".foot-ring");
     const topple = () => {
       foot.classList.remove("topple"); void foot.offsetWidth; foot.classList.add("topple");
       setTimeout(() => sparkle(ring, 10, 30), 330);
+      setTimeout(() => firework(ring), 1250);
     };
     foot.addEventListener("click", topple);
     foot.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); topple(); } });
