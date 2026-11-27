@@ -69,6 +69,55 @@
     addEventListener("resize", sizeFly);
   }
 
+  // The logo in the nav spins along with the scroll (faster the faster you
+  // scroll, backwards when you scroll up) and coasts to a stop.
+  const brandSpin = document.querySelector(".brand-spin");
+  let spinA = 0, spinV = 0, lastY = scrollY, spinning = false, spinT = 0;
+  const spin = now => {
+    const dt = Math.min(0.05, (now - (spinT || now)) / 1000); spinT = now;
+    spinA = (spinA + spinV * dt * 6) % 360;
+    spinV *= Math.pow(0.04, dt);
+    if (brandSpin) brandSpin.style.transform = `rotate(${spinA.toFixed(1)}deg)`;
+    if (Math.abs(spinV) > 0.5) requestAnimationFrame(spin); else { spinning = false; spinT = 0; }
+  };
+
+  // Sparks thrown off a logo ring (the nav logo on hover or tap, the footer
+  // logo when the cannonball hits it).
+  const COLS = ["#FFB547", "#FF5E7E", "#B45CFF", "#3FB8FF", "#2EE6A8"];
+  const sparkle = (host, n = 12, reach = 34) => {
+    if (reduced || !host) return;
+    for (let i = 0; i < n; i++) {
+      const sp = document.createElement("i");
+      sp.className = "spark";
+      const a = (i / n) * 6.283 + Math.random() * 0.4, d = reach * (0.6 + Math.random() * 0.7);
+      sp.style.setProperty("--dx", `${(Math.cos(a) * d).toFixed(1)}px`);
+      sp.style.setProperty("--dy", `${(Math.sin(a) * d).toFixed(1)}px`);
+      sp.style.setProperty("--c", COLS[i % COLS.length]);
+      sp.addEventListener("animationend", () => sp.remove());
+      host.appendChild(sp);
+    }
+  };
+  const brand = document.querySelector(".brand");
+  if (brand) {
+    brand.addEventListener("pointerenter", () => sparkle(brandSpin));
+    brand.addEventListener("click", () => { sparkle(brandSpin, 16, 44); spinV += 260; if (!spinning) { spinning = true; requestAnimationFrame(spin); } });
+  }
+
+  // The footer logo topples: a cannonball rolls in and knocks it into the
+  // air the first time it comes into view, and again on every tap.
+  const foot = document.querySelector(".foot-brand");
+  if (foot && !reduced) {
+    const ring = foot.querySelector(".foot-ring");
+    const topple = () => {
+      foot.classList.remove("topple"); void foot.offsetWidth; foot.classList.add("topple");
+      setTimeout(() => sparkle(ring, 10, 30), 330);
+    };
+    foot.addEventListener("click", topple);
+    foot.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); topple(); } });
+    foot.querySelector(".foot-hop").addEventListener("animationend", () => foot.classList.remove("topple"));
+    new IntersectionObserver(([e], o) => { if (e.isIntersecting) { o.disconnect(); setTimeout(topple, 500); } }, { threshold: 1 }).observe(foot);
+  }
+
   // Scroll: the letterbox bars open, the title fades as the camera starts
   // moving, the frames follow the scroll, the nav turns solid past the hero.
   let ticking = false;
@@ -89,8 +138,8 @@
       shade.style.opacity = (1 - Math.min(1, Math.max(0, (t - 0.1) / 0.45))).toFixed(3);
       if (motesEl) motesEl.style.opacity = (1 - Math.min(1, Math.max(0, (t - 0.6) / 0.3))).toFixed(3);
       // the last frame (inside the barn) holds for the final stretch while its floor fades to the page
-      wanted = Math.round(Math.min(1, Math.max(0, (t - 0.04) / 0.84)) * (FRAMES - 1));
-      if (floor) floor.style.opacity = Math.min(1, Math.max(0, (t - 0.84) / 0.16)).toFixed(3);
+      wanted = Math.round(Math.min(1, Math.max(0, (t - 0.03) / 0.88)) * (FRAMES - 1));
+      if (floor) floor.style.opacity = Math.min(1, Math.max(0, (t - 0.88) / 0.12)).toFixed(3);
       paint();
       phones.forEach(p => {
         const r = p.getBoundingClientRect();
@@ -99,6 +148,7 @@
       });
     }
     nav.classList.toggle("solid", y > span + vh * 0.3);
+    if (!reduced) { spinV += (y - lastY) * 0.9; lastY = y; if (!spinning) { spinning = true; requestAnimationFrame(spin); } }
   };
   addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
   onScroll();
@@ -106,7 +156,7 @@
   // Scroll reveals.
   const io = new IntersectionObserver(entries => {
     entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } });
-  }, { threshold: 0.15, rootMargin: "0px 0px -6% 0px" });
+  }, { threshold: 0.06, rootMargin: "0px 0px -3% 0px" });
   document.querySelectorAll(".reveal").forEach(el => io.observe(el));
 
   // Golden dust drifting through the evening light (stops when the hero is off screen).
@@ -161,6 +211,47 @@
     const step = card ? card.getBoundingClientRect().width + 20 : 300;
     strip.scrollBy({ left: step * 2 * Number(b.dataset.dir), behavior: reduced ? "auto" : "smooth" });
   }));
+
+  // On a computer the worlds strip can be dragged with the mouse (click and
+  // hold, move left or right); it glides on after you let go and settles
+  // on a card.
+  if (strip && matchMedia("(hover: hover) and (pointer: fine)").matches) {
+    let down = false, sx = 0, sl = 0, moved = 0, v = 0, lx = 0, lt = 0, raf = 0;
+    const settle = () => {
+      const cards = [...strip.querySelectorAll(".chapter")];
+      const pad = parseFloat(getComputedStyle(strip).paddingLeft) || 0;
+      const best = cards.reduce((b, c) => Math.abs(c.offsetLeft - pad - strip.scrollLeft) < Math.abs(b - strip.scrollLeft) ? c.offsetLeft - pad : b, 0);
+      strip.scrollTo({ left: best, behavior: reduced ? "auto" : "smooth" });
+      setTimeout(() => strip.classList.remove("dragging"), 450);
+    };
+    strip.addEventListener("pointerdown", e => {
+      if (e.pointerType !== "mouse" || e.button !== 0) return;
+      down = true; moved = 0; sx = lx = e.clientX; sl = strip.scrollLeft; lt = performance.now(); v = 0;
+      cancelAnimationFrame(raf);
+      strip.classList.add("dragging");
+    });
+    addEventListener("pointermove", e => {
+      if (!down) return;
+      const dx = e.clientX - sx;
+      moved = Math.max(moved, Math.abs(dx));
+      strip.scrollLeft = sl - dx;
+      const now = performance.now();
+      v = (e.clientX - lx) / Math.max(1, now - lt) * 16; lx = e.clientX; lt = now;
+    });
+    addEventListener("pointerup", () => {
+      if (!down) return;
+      down = false;
+      if (moved < 6) { strip.classList.remove("dragging"); return; }
+      let speed = -v;
+      const glide = () => {
+        strip.scrollLeft += speed; speed *= 0.92;
+        if (Math.abs(speed) > 0.6) raf = requestAnimationFrame(glide); else settle();
+      };
+      raf = requestAnimationFrame(glide);
+    });
+    strip.addEventListener("click", e => { if (moved >= 6) { e.preventDefault(); e.stopPropagation(); } }, true);
+    strip.addEventListener("dragstart", e => e.preventDefault());
+  }
 
   // Music: off until the visitor turns it on; fades in and out.
   const btn = document.querySelector(".sound");

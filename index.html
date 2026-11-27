@@ -18,10 +18,10 @@
 <link rel="apple-touch-icon" href="/assets/img/icon-ring-touch.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Playfair+Display:ital,wght@1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bungee&family=Cinzel:wght@400;500;600&family=Playfair+Display:ital,wght@1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="/assets/fly2/tall/000.webp" media="(max-aspect-ratio: 1/1)">
 <link rel="preload" as="image" href="/assets/fly2/wide/000.webp" media="(min-aspect-ratio: 1/1)">
-<link rel="stylesheet" href="/assets/site.css?v=20261127n">
+<link rel="stylesheet" href="/assets/site.css?v=20261127p">
 <script>try{if(sessionStorage.getItem("as-intro"))document.documentElement.className+=" seen";sessionStorage.setItem("as-intro","1")}catch(e){}</script>
 </head>
 <body>
@@ -34,7 +34,7 @@
 </div>
 
 <header class="nav">
-  <a class="brand" href="#top" aria-label="Amazedsaints, back to the top"><img class="brand-mark" src="/assets/logo/mark.webp" alt="" width="30" height="30"><span class="brand-word"><b>Amazed</b>saints</span></a>
+  <a class="brand" href="#top" aria-label="Amazedsaints, back to the top"><span class="brand-spin"><img class="brand-mark" src="/assets/logo/mark.webp" alt="" width="30" height="30"></span><span class="brand-word"><b>Amazed</b>saints</span></a>
   <nav aria-label="Sections">
     <a href="#work">Work</a>
     <a href="#studio">Studio</a>
@@ -136,6 +136,7 @@
       <article class="chapter" data-fx="embers"><img loading="lazy" src="/assets/img/world-iron.webp" alt=""><div><small>Chapter 07</small><h3>Iron Works</h3><p>Furnaces, cranes and freight cars in a town of steel.</p></div></article>
       <article class="chapter" data-fx="fireworks"><img loading="lazy" src="/assets/img/world-summit.webp" alt=""><div><small>Chapter 08</small><h3>Starlight Summit</h3><p>Fireworks over the peaks, and the hardest climb of all.</p></div></article>
     </div>
+    <p class="strip-hint">Drag or swipe to see every world</p>
     <div class="launchers reveal">
       <p class="eyebrow">A launcher for every world <span class="hint">· tap one to fire</span></p>
       <ul>
@@ -162,19 +163,20 @@
         <img loading="lazy" src="/assets/img/poster-topplonium.webp" alt="Topplonium: a red barn at golden hour">
         <span><small>Game · Android · Coming soon</small><strong>Topplonium</strong></span>
       </a>
-      <article class="poster poster-concept reveal" data-fx="beam">
+      <article class="poster poster-concept reveal" data-fx="beam" tabindex="0" role="button" aria-label="Tap to wake the Lumen Keeper poster">
         <img loading="lazy" src="/assets/img/poster-lumen-keeper-v2.webp" alt="Lumen Keeper concept art">
         <span><small>Game · In creation</small><strong>Lumen Keeper</strong></span>
       </article>
-      <article class="poster poster-concept reveal" data-fx="paper">
+      <article class="poster poster-concept reveal" data-fx="paper" tabindex="0" role="button" aria-label="Tap to wake the Paper Skies poster">
         <img loading="lazy" src="/assets/img/poster-paper-skies-v2.webp" alt="Paper Skies concept art">
         <span><small>Game · In strategy</small><strong>Paper Skies</strong></span>
       </article>
-      <article class="poster poster-concept reveal" data-fx="seeds">
+      <article class="poster poster-concept reveal" data-fx="seeds" tabindex="0" role="button" aria-label="Tap to wake the Gravity Garden poster">
         <img loading="lazy" src="/assets/img/poster-gravity-garden-v2.webp" alt="Gravity Garden concept art">
         <span><small>Game · On the drawing board</small><strong>Gravity Garden</strong></span>
       </article>
     </div>
+    <p class="poster-hint reveal" style="padding: 0 var(--gutter)"><b>Tap a poster</b> · each one wakes up its own way</p>
   </section>
 
   <!-- STUDIO -->
@@ -207,12 +209,12 @@
 <canvas class="fx" aria-hidden="true"></canvas>
 
 <footer class="foot">
-  <span class="foot-brand"><img src="/assets/logo/mark.webp" alt="" width="20" height="20">© 2026 Amazedsaints</span>
+  <span class="foot-brand" role="button" tabindex="0" aria-label="Amazedsaints: knock the logo over"><span class="foot-ring"><i class="foot-ball"></i><span class="foot-hop"><img src="/assets/logo/mark.webp" alt="" width="34" height="34"></span></span><span><span class="foot-word"><b>Amazed</b>saints</span><br><small>© 2026 · Everything topples</small></span></span>
   <a href="/privacy">Privacy</a>
 </footer>
 
 <audio class="music" src="/assets/audio/barn-door-sunday.mp3" preload="none" loop></audio>
-<script src="/assets/site.js?v=20261127n" defer></script>
-<script src="/assets/play.js?v=20261127n" defer></script>
+<script src="/assets/site.js?v=20261127p" defer></script>
+<script src="/assets/play.js?v=20261127p" defer></script>
 </body>
 </html>
