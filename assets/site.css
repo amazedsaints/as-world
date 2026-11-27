@@ -318,9 +318,32 @@ a.glass-card:hover { transform: translateY(-4px); border-color: rgba(255, 255, 2
 .chapter-soon img { filter: grayscale(.75) brightness(.55); }
 .launchers { padding: clamp(60px, 10vh, 100px) var(--gutter) 0; text-align: center; }
 .launchers ul { display: flex; flex-wrap: wrap; justify-content: center; gap: clamp(8px, 2vw, 26px); }
-.launchers li { width: clamp(64px, 8vw, 104px); aspect-ratio: 1; border-radius: 50%; overflow: hidden; background: radial-gradient(circle, rgba(227, 180, 94, .16), transparent 70%); border: 1px solid var(--line); transition: transform .4s, border-color .4s; }
-.launchers li:hover { transform: translateY(-6px); border-color: var(--gold-soft); }
-.launchers img { width: 100%; height: 100%; object-fit: cover; }
+.launchers .hint { color: var(--muted); }
+.launchers li { width: clamp(64px, 8vw, 104px); }
+.launcher {
+  display: block; width: 100%; aspect-ratio: 1; padding: 0; border-radius: 50%; overflow: hidden; cursor: pointer;
+  background: radial-gradient(circle, rgba(227, 180, 94, .16), transparent 70%);
+  border: 1px solid var(--line);
+  transition: transform .4s, border-color .3s, box-shadow .3s;
+  -webkit-tap-highlight-color: transparent;
+}
+.launcher:hover { transform: translateY(-6px); border-color: var(--gold-soft); }
+.launcher:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+.launcher img { width: 100%; height: 100%; object-fit: cover; }
+.launcher.fire { border-color: #ffd98a; box-shadow: 0 0 34px rgba(255, 190, 90, .5); }
+.launcher.fire img { animation: recoil .5s cubic-bezier(.2, .8, .3, 1); }
+@keyframes recoil { 0% { transform: none; } 12% { transform: translate(var(--kx, -6px), var(--ky, 5px)) scale(.96); } 100% { transform: none; } }
+/* cannonballs, flashes and smoke are drawn over the page */
+.fx { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 25; pointer-events: none; }
+/* a world card that takes a hit */
+.chapter.hit { animation: card-hit .7s cubic-bezier(.3, .7, .3, 1); }
+@keyframes card-hit {
+  0% { transform: none; }
+  18% { transform: translateY(-12px) rotate(var(--tilt, 2deg)) scale(1.02); }
+  45% { transform: translateY(3px) rotate(calc(var(--tilt, 2deg) * -.5)); }
+  70% { transform: translateY(-2px) rotate(calc(var(--tilt, 2deg) * .2)); }
+  100% { transform: none; }
+}
 
 /* ---------- work ---------- */
 .work { padding: clamp(90px, 15vh, 160px) 0; }
@@ -331,6 +354,16 @@ a.glass-card:hover { transform: translateY(-4px); border-color: rgba(255, 255, 2
 }
 .poster img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s cubic-bezier(.2, .7, .2, 1); }
 .poster:hover img { transform: scale(1.06); }
+/* living posters: the picture drifts slowly, effects are drawn over it */
+.poster { transition: transform .35s ease, border-color .35s; will-change: transform; }
+.poster:hover { border-color: var(--gold-soft); }
+.poster-art { position: absolute; inset: 0; animation: poster-drift 24s ease-in-out infinite alternate; }
+.poster:nth-child(2) .poster-art { animation-duration: 29s; animation-direction: alternate-reverse; }
+.poster:nth-child(3) .poster-art { animation-duration: 21s; }
+.poster:nth-child(4) .poster-art { animation-duration: 33s; animation-direction: alternate-reverse; }
+.poster-art img { transition: none; transform: none !important; }
+.poster-fx { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; mix-blend-mode: screen; }
+@keyframes poster-drift { from { transform: scale(1.05) translate(-1.2%, -1%); } to { transform: scale(1.14) translate(1.4%, 1.6%); } }
 .poster::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(5, 6, 9, .92) 8%, transparent 55%); }
 .poster span { position: absolute; z-index: 1; left: 22px; right: 22px; bottom: 22px; }
 .poster small { display: block; font-size: 10px; letter-spacing: .36em; text-transform: uppercase; color: var(--gold); }
@@ -410,6 +443,7 @@ a.glass-card:hover { transform: translateY(-4px); border-color: rgba(255, 255, 2
   *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0s !important; transition-duration: .01ms !important; }
   .intro { display: none; }
   .hero-copy, .credits, .scroll-cue, .glass-row { opacity: 1; }
+  .fx { display: none; }
   .hero-scroll { height: auto; }
   .hero { position: relative; }
   .fly { display: none; }

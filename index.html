@@ -20,7 +20,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Playfair+Display:ital,wght@1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="/assets/fly/tall/000.webp" media="(max-aspect-ratio: 1/1)">
 <link rel="preload" as="image" href="/assets/fly/wide/000.webp" media="(min-aspect-ratio: 1/1)">
-<link rel="stylesheet" href="/assets/site.css?v=20261127d">
+<link rel="stylesheet" href="/assets/site.css?v=20261127f">
 <script>try{if(sessionStorage.getItem("as-intro"))document.documentElement.className+=" seen";sessionStorage.setItem("as-intro","1")}catch(e){}</script>
 </head>
 <body>
@@ -130,16 +130,16 @@
       <article class="chapter chapter-soon"><img loading="lazy" src="/assets/img/world-summit.webp" alt=""><div><small>Chapter 08</small><h3>Starlight Summit</h3><p>The final climb.</p></div></article>
     </div>
     <div class="launchers reveal">
-      <p class="eyebrow">A launcher for every world</p>
+      <p class="eyebrow">A launcher for every world <span class="hint">· tap one to fire</span></p>
       <ul>
-        <li><img loading="lazy" src="/assets/img/launcher-toy_tank.webp" alt="Tin toy tank"></li>
-        <li><img loading="lazy" src="/assets/img/launcher-bronze_naval.webp" alt="Bronze ship cannon"></li>
-        <li><img loading="lazy" src="/assets/img/launcher-field_gun.webp" alt="Field gun"></li>
-        <li><img loading="lazy" src="/assets/img/launcher-carnival.webp" alt="Carnival cannon"></li>
-        <li><img loading="lazy" src="/assets/img/launcher-toy_lacquer.webp" alt="Lacquered toy cannon"></li>
-        <li><img loading="lazy" src="/assets/img/launcher-ice_cannon.webp" alt="Ice cannon"></li>
-        <li><img loading="lazy" src="/assets/img/launcher-steampunk.webp" alt="Copper steam cannon"></li>
-        <li><img loading="lazy" src="/assets/img/launcher-ballista.webp" alt="Giant crossbow"></li>
+        <li><button type="button" class="launcher" data-m="78,20" data-d="0.83,-0.55" aria-label="Fire the tin toy tank"><img loading="lazy" src="/assets/img/launcher-toy_tank.webp" alt="Tin toy tank" width="104" height="104"></button></li>
+        <li><button type="button" class="launcher" data-m="73,23" data-d="0.78,-0.63" aria-label="Fire the bronze ship cannon"><img loading="lazy" src="/assets/img/launcher-bronze_naval.webp" alt="Bronze ship cannon" width="104" height="104"></button></li>
+        <li><button type="button" class="launcher" data-m="72,25" data-d="0.84,-0.54" aria-label="Fire the field gun"><img loading="lazy" src="/assets/img/launcher-field_gun.webp" alt="Field gun" width="104" height="104"></button></li>
+        <li><button type="button" class="launcher" data-m="74,25" data-d="0.76,-0.65" aria-label="Fire the carnival cannon"><img loading="lazy" src="/assets/img/launcher-carnival.webp" alt="Carnival cannon" width="104" height="104"></button></li>
+        <li><button type="button" class="launcher" data-m="71,25" data-d="0.78,-0.63" aria-label="Fire the lacquered toy cannon"><img loading="lazy" src="/assets/img/launcher-toy_lacquer.webp" alt="Lacquered toy cannon" width="104" height="104"></button></li>
+        <li><button type="button" class="launcher" data-m="77,24" data-d="0.81,-0.59" aria-label="Fire the ice cannon"><img loading="lazy" src="/assets/img/launcher-ice_cannon.webp" alt="Ice cannon" width="104" height="104"></button></li>
+        <li><button type="button" class="launcher" data-m="74,26" data-d="0.77,-0.63" aria-label="Fire the copper steam cannon"><img loading="lazy" src="/assets/img/launcher-steampunk.webp" alt="Copper steam cannon" width="104" height="104"></button></li>
+        <li><button type="button" class="launcher" data-m="60,31" data-d="0.77,-0.64" aria-label="Fire the giant crossbow"><img loading="lazy" src="/assets/img/launcher-ballista.webp" alt="Giant crossbow" width="104" height="104"></button></li>
       </ul>
     </div>
   </section>
@@ -151,19 +151,19 @@
       <h2>What we are <em>making</em></h2>
     </div>
     <div class="posters">
-      <a class="poster reveal" href="#topplonium">
+      <a class="poster reveal" href="#topplonium" data-fx="motes">
         <img loading="lazy" src="/assets/img/poster-topplonium.webp" alt="Topplonium: a red barn at golden hour">
         <span><small>Game · Android · Coming soon</small><strong>Topplonium</strong></span>
       </a>
-      <article class="poster poster-concept reveal">
+      <article class="poster poster-concept reveal" data-fx="beam">
         <img loading="lazy" src="/assets/img/poster-lumen-keeper.webp" alt="Lumen Keeper concept art">
         <span><small>Game · In creation</small><strong>Lumen Keeper</strong></span>
       </article>
-      <article class="poster poster-concept reveal">
+      <article class="poster poster-concept reveal" data-fx="paper">
         <img loading="lazy" src="/assets/img/poster-paper-skies.webp" alt="Paper Skies concept art">
         <span><small>Game · In strategy</small><strong>Paper Skies</strong></span>
       </article>
-      <article class="poster poster-concept reveal">
+      <article class="poster poster-concept reveal" data-fx="seeds">
         <img loading="lazy" src="/assets/img/poster-gravity-garden.webp" alt="Gravity Garden concept art">
         <span><small>Game · On the drawing board</small><strong>Gravity Garden</strong></span>
       </article>
@@ -193,12 +193,15 @@
 
 </main>
 
+<canvas class="fx" aria-hidden="true"></canvas>
+
 <footer class="foot">
   <span class="foot-brand"><img src="/assets/logo/mark.webp" alt="" width="20" height="20">© 2026 Amazedsaints</span>
   <a href="/privacy">Privacy</a>
 </footer>
 
 <audio class="music" src="/assets/audio/barn-door-sunday.mp3" preload="none" loop></audio>
-<script src="/assets/site.js?v=20261127d" defer></script>
+<script src="/assets/site.js?v=20261127f" defer></script>
+<script src="/assets/play.js?v=20261127f" defer></script>
 </body>
 </html>
