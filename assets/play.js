@@ -48,12 +48,29 @@
       if (r.bottom < 0 || r.top > H) return;
       const [mx, my] = btn.dataset.m.split(",").map(Number);
       let [dx, dy] = btn.dataset.d.split(",").map(Number);
-      const x = r.left + r.width * mx / 100, y = r.top + r.height * my / 100;
+      let x = r.left + r.width * mx / 100, y = r.top + r.height * my / 100;
       if (target) {
         const t = target.getBoundingClientRect();
         const tx = t.left + t.width * rand(0.3, 0.7), ty = t.top + t.height * rand(0.45, 0.75);
-        const T = Math.min(0.8, Math.max(0.45, Math.hypot(tx - x, ty - y) / 900)), g = 900;
-        const vx = (tx - x) / T, vy = (ty - y) / T - 0.5 * g * T;
+        const cx = r.left + r.width / 2, cy = r.top + r.height / 2, g = 900;
+        const solve = (sx, sy) => {
+          const T = Math.min(0.8, Math.max(0.45, Math.hypot(tx - sx, ty - sy) / 900));
+          return [T, (tx - sx) / T, (ty - sy) / T - 0.5 * g * T];
+        };
+        // Aim the launcher: its picture points up and to the right, so it
+        // is flipped for a target on the left, then tilted toward the shot.
+        let [T, vx, vy] = solve(cx, cy);
+        const flip = vx < 0;
+        const bx = flip ? -dx : dx;
+        let turn = Math.atan2(vy, vx) - Math.atan2(dy, bx);
+        turn = Math.max(-0.7, Math.min(0.7, Math.atan2(Math.sin(turn), Math.cos(turn))));
+        const img = btn.querySelector("img");
+        if (img) img.style.transform = `rotate(${(turn * 57.2958).toFixed(1)}deg) scaleX(${flip ? -1 : 1})`;
+        // the muzzle, after the same flip and tilt
+        const ox = (mx - 50) / 100 * r.width * (flip ? -1 : 1), oy = (my - 50) / 100 * r.height;
+        x = cx + ox * Math.cos(turn) - oy * Math.sin(turn);
+        y = cy + ox * Math.sin(turn) + oy * Math.cos(turn);
+        [T, vx, vy] = solve(x, y);
         balls.push({ x, y, vx, vy, g, r: Math.max(7, r.width * 0.1), life: 0, trail: [], only: target, T });
         const n = Math.hypot(vx, vy); dx = vx / n; dy = vy / n;
       } else {

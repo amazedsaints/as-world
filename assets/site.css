@@ -322,16 +322,19 @@ a.glass-card:hover { transform: translateY(-4px); border-color: rgba(255, 255, 2
 .launchers li { width: clamp(64px, 8vw, 104px); }
 .launcher {
   display: block; width: 100%; aspect-ratio: 1; padding: 0; border-radius: 50%; overflow: hidden; cursor: pointer;
-  background: radial-gradient(circle, rgba(227, 180, 94, .16), transparent 70%);
+  /* the same soft grey as the launcher pictures' own backdrop, so nothing
+     dark shows when a picture tilts to aim */
+  background: linear-gradient(180deg, #bab7af, #d3cbc4);
   border: 1px solid var(--line);
   transition: transform .4s, border-color .3s, box-shadow .3s;
   -webkit-tap-highlight-color: transparent;
 }
 .launcher:hover { transform: translateY(-6px); border-color: var(--gold-soft); }
 .launcher:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
-.launcher img { width: 100%; height: 100%; object-fit: cover; }
+.launcher img { width: 100%; height: 100%; object-fit: cover; transition: transform .16s ease-out; }
 .launcher.fire { border-color: #ffd98a; box-shadow: 0 0 34px rgba(255, 190, 90, .5); }
-.launcher.fire img { animation: recoil .5s cubic-bezier(.2, .8, .3, 1); }
+/* the whole badge kicks back; the picture never slides inside its frame */
+.launcher.fire { animation: recoil .5s cubic-bezier(.2, .8, .3, 1); }
 @keyframes recoil { 0% { transform: none; } 12% { transform: translate(var(--kx, -6px), var(--ky, 5px)) scale(.96); } 100% { transform: none; } }
 /* the cannon under the game pictures: tap a picture and it fires at it */
 .reel-fire { margin-top: clamp(22px, 4vh, 40px); display: flex; align-items: center; justify-content: center; gap: 18px; }
