@@ -128,7 +128,13 @@ h2 {
   transition: background .4s, height .4s;
 }
 .nav.solid { background: rgba(7, 8, 11, .82); backdrop-filter: blur(10px); height: 58px; border-bottom: 1px solid var(--line); }
-.brand { font: 500 13px/1 var(--serif); letter-spacing: .42em; text-decoration: none; margin-right: auto; }
+.brand { display: inline-flex; align-items: center; gap: 12px; font: 500 13px/1 var(--serif); letter-spacing: .42em; text-decoration: none; margin-right: auto; text-transform: uppercase; }
+.brand-mark { width: 30px; height: 30px; }
+.brand-word b, .intro-studio b { font-weight: 600; background: linear-gradient(90deg, #FFB547, #FF5E7E 45%, #B45CFF 75%, #3FB8FF); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.intro-mark { width: clamp(70px, 9vw, 110px); height: auto; margin: 0 auto 26px; opacity: 0; animation: mark-in 1.4s ease .1s forwards; }
+@keyframes mark-in { from { opacity: 0; transform: scale(.7) rotate(-40deg); } to { opacity: 1; transform: none; } }
+.foot-brand { display: inline-flex; align-items: center; gap: 10px; }
+.foot-brand img { width: 20px; height: 20px; }
 .nav nav { display: flex; gap: 28px; }
 .nav nav a { text-decoration: none; color: var(--muted); transition: color .3s; }
 .nav nav a:hover { color: var(--ink); }
@@ -294,9 +300,9 @@ h2 {
 .poster small { display: block; font-size: 10px; letter-spacing: .36em; text-transform: uppercase; color: var(--gold); }
 .poster strong { display: block; margin-top: 8px; font: 400 clamp(22px, 2.1vw, 30px)/1.1 var(--serif); letter-spacing: .05em; }
 .poster em { display: block; margin-top: 10px; font: 500 10px/1 var(--sans); letter-spacing: .34em; text-transform: uppercase; color: var(--dim); }
-.poster-empty::after { background: radial-gradient(ellipse at 50% 30%, rgba(227, 180, 94, .07), transparent 60%); }
-.poster-empty span { top: 50%; bottom: auto; transform: translateY(-50%); text-align: center; }
-.poster-empty strong { color: rgba(242, 237, 228, .8); }
+.poster-concept em { text-transform: none; letter-spacing: .01em; font: 400 13px/1.5 var(--sans); color: #c9c2b7; max-height: 0; opacity: 0; overflow: hidden; transition: max-height .6s ease, opacity .6s ease, margin .6s ease; margin-top: 0; }
+.poster-concept:hover em, .poster-concept:focus-within em { max-height: 120px; opacity: 1; margin-top: 10px; }
+@media (hover: none) { .poster-concept em { max-height: 120px; opacity: 1; margin-top: 10px; } }
 
 /* ---------- studio ---------- */
 .studio { position: relative; overflow: hidden; padding: clamp(110px, 20vh, 220px) var(--gutter); }
@@ -352,13 +358,9 @@ h2 {
   .phone-lift { margin-top: 0; }
   .chapter { flex-basis: 72vw; }
   .strip-nav { display: none; }
-  .posters { grid-template-columns: 1fr; gap: 10px; }
+  .posters { grid-template-columns: 1fr; gap: 14px; }
   .poster { aspect-ratio: 4 / 5; }
-  .poster-empty { aspect-ratio: auto; min-height: 96px; }
-  .poster-empty span { position: static; transform: none; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 4px 12px; padding: 22px; text-align: left; }
-  .poster-empty small { grid-column: 1 / -1; }
-  .poster-empty strong { margin-top: 0; font-size: 22px; }
-  .poster-empty em { margin-top: 0; }
+  .brand-mark { width: 26px; height: 26px; }
   .mail { font-size: clamp(16px, 5.2vw, 24px); white-space: nowrap; }
   .stats { gap: 22px; }
   .studio-bg::after { background: linear-gradient(0deg, rgba(7, 8, 11, .95) 10%, rgba(7, 8, 11, .55) 60%, rgba(7, 8, 11, .8) 100%); }
