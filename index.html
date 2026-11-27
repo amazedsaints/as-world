@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Amazedsaints · Topplonium</title>
+<meta name="description" content="Amazedsaints is an independent studio making games, apps and software. Our first game, Topplonium, is a physics game about the perfect shot: everything topples, make it count. Coming soon to Google Play.">
+<meta name="theme-color" content="#07080b">
+<link rel="canonical" href="https://www.amazedsaints.com/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.amazedsaints.com/">
+<meta property="og:title" content="Topplonium · Everything topples. Make it count.">
+<meta property="og:description" content="A physics game about the perfect shot. 100 hand-built levels across eight worlds. Coming soon to Google Play.">
+<meta property="og:image" content="https://www.amazedsaints.com/assets/img/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/assets/img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Playfair+Display:ital,wght@1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="/assets/img/hero-tall.webp" media="(max-aspect-ratio: 1/1)">
+<link rel="preload" as="image" href="/assets/img/hero-wide.webp" media="(min-aspect-ratio: 1/1)">
+<link rel="stylesheet" href="/assets/site.css">
+<script>try{if(sessionStorage.getItem("as-intro"))document.documentElement.className+=" seen";sessionStorage.setItem("as-intro","1")}catch(e){}</script>
+</head>
+<body>
+
+<!-- Opening titles: black, then the studio, then the scene -->
+<div class="intro" aria-hidden="true">
+  <div class="intro-studio">Amazedsaints</div>
+  <div class="intro-presents">presents</div>
+</div>
+
+<header class="nav">
+  <a class="brand" href="#top">Amazedsaints</a>
+  <nav aria-label="Sections">
+    <a href="#work">Work</a>
+    <a href="#studio">Studio</a>
+    <a href="#contact">Contact</a>
+  </nav>
+  <button class="sound" type="button" aria-pressed="false" aria-label="Turn sound on">
+    <span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+    <span class="sound-label">Sound off</span>
+  </button>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero" aria-label="Topplonium">
+    <picture class="hero-bg">
+      <source media="(min-aspect-ratio: 1/1)" srcset="/assets/img/hero-wide.webp">
+      <img src="/assets/img/hero-tall.webp" alt="A red barn at golden hour, hay bales, a stack of split logs and an axe in a stump">
+    </picture>
+    <canvas class="motes" aria-hidden="true"></canvas>
+    <div class="hero-shade" aria-hidden="true"></div>
+    <div class="bar bar-top" aria-hidden="true"></div>
+    <div class="bar bar-bottom" aria-hidden="true"></div>
+
+    <div class="hero-copy">
+      <p class="eyebrow">Amazedsaints presents</p>
+      <h1 class="title">Topplonium</h1>
+      <p class="tagline">Everything topples. Make it count.</p>
+      <div class="cta">
+        <a class="btn btn-gold" href="#topplonium">See it in action</a>
+        <a class="btn btn-line" href="mailto:hello@amazedsaints.com?subject=Notify%20me%3A%20Topplonium%20launch&body=Please%20let%20me%20know%20when%20Topplonium%20is%20on%20Google%20Play.">Coming soon to Google Play</a>
+      </div>
+    </div>
+    <p class="credits">100 levels <span>·</span> 8 worlds <span>·</span> one cannon <span>·</span> no ads</p>
+    <a class="scroll-cue" href="#topplonium" aria-label="Scroll down"><span></span></a>
+  </section>
+
+  <!-- THE GAME -->
+  <section class="game" id="topplonium">
+    <div class="game-copy reveal">
+      <p class="eyebrow">The game</p>
+      <h2>Strategy,<br>not point and shoot</h2>
+      <p>Every level hides a key move: a weak point, a shielded target, a chain reaction waiting for one push. Tap at whatever is nearest and you run out of shots. Find the move, and a single cannonball brings the whole display crashing down.</p>
+      <dl class="stats">
+        <div><dt>100</dt><dd>hand-built levels</dd></div>
+        <div><dt>8</dt><dd>worlds</dd></div>
+        <div><dt>0</dt><dd>ads, ever</dd></div>
+      </dl>
+    </div>
+    <div class="reel" aria-label="Scenes from the game">
+      <figure class="phone reveal" data-depth="0.06"><img loading="lazy" src="/assets/img/shot-kitchen.webp" alt="Copper pots and pans flying through a kitchen shop"><figcaption>Kitchen Shop</figcaption></figure>
+      <figure class="phone phone-lift reveal" data-depth="-0.05"><img loading="lazy" src="/assets/img/shot-ginger.webp" alt="Gingerbread houses breaking apart in a snowy alpine village"><figcaption>Gingerbread Village</figcaption></figure>
+      <figure class="phone reveal" data-depth="0.08"><img loading="lazy" src="/assets/img/shot-lighthouse.webp" alt="A brick lighthouse on a rocky island by the sea"><figcaption>Brick Lighthouse</figcaption></figure>
+    </div>
+  </section>
+
+  <!-- WORLDS -->
+  <section class="worlds" id="worlds">
+    <div class="section-head reveal">
+      <p class="eyebrow">Eight worlds</p>
+      <h2>Chapter by chapter,<br>each harder to bring down</h2>
+      <div class="strip-nav">
+        <button type="button" class="strip-btn" data-dir="-1" aria-label="Previous worlds">&#8592;</button>
+        <button type="button" class="strip-btn" data-dir="1" aria-label="Next worlds">&#8594;</button>
+      </div>
+    </div>
+    <div class="strip" tabindex="0" aria-label="The eight worlds of Topplonium">
+      <article class="chapter"><img loading="lazy" src="/assets/img/world-toytown.webp" alt=""><div><small>Chapter 01</small><h3>Toy Town</h3><p>Blocks, balloons and a first taste of the cannon.</p></div></article>
+      <article class="chapter"><img loading="lazy" src="/assets/img/world-bricks.webp" alt=""><div><small>Chapter 02</small><h3>Brick Kingdom</h3><p>Castles, lighthouses and a rocket on the launch pad.</p></div></article>
+      <article class="chapter"><img loading="lazy" src="/assets/img/world-golden.webp" alt=""><div><small>Chapter 03</small><h3>Golden Hills</h3><p>Barns, haystacks and honey on a long autumn afternoon.</p></div></article>
+      <article class="chapter"><img loading="lazy" src="/assets/img/world-sweet.webp" alt=""><div><small>Chapter 04</small><h3>Sweet Clouds</h3><p>Macarons, donuts and a candy castle above the clouds.</p></div></article>
+      <article class="chapter"><img loading="lazy" src="/assets/img/world-main.webp" alt=""><div><small>Chapter 05</small><h3>Main Street</h3><p>Every shop in town, from the toy store to the grand department store.</p></div></article>
+      <article class="chapter"><img loading="lazy" src="/assets/img/world-crystal.webp" alt=""><div><small>Chapter 06</small><h3>Crystal Caverns</h3><p>Ice sculptures, frosted glass and lanterns in the dark.</p></div></article>
+      <article class="chapter chapter-soon"><img loading="lazy" src="/assets/img/world-iron.webp" alt=""><div><small>Chapter 07</small><h3>Iron Works</h3><p>In the forge.</p></div></article>
+      <article class="chapter chapter-soon"><img loading="lazy" src="/assets/img/world-summit.webp" alt=""><div><small>Chapter 08</small><h3>Starlight Summit</h3><p>The final climb.</p></div></article>
+    </div>
+    <div class="launchers reveal">
+      <p class="eyebrow">A launcher for every world</p>
+      <ul>
+        <li><img loading="lazy" src="/assets/img/launcher-toy_tank.webp" alt="Tin toy tank"></li>
+        <li><img loading="lazy" src="/assets/img/launcher-bronze_naval.webp" alt="Bronze ship cannon"></li>
+        <li><img loading="lazy" src="/assets/img/launcher-field_gun.webp" alt="Field gun"></li>
+        <li><img loading="lazy" src="/assets/img/launcher-carnival.webp" alt="Carnival cannon"></li>
+        <li><img loading="lazy" src="/assets/img/launcher-toy_lacquer.webp" alt="Lacquered toy cannon"></li>
+        <li><img loading="lazy" src="/assets/img/launcher-ice_cannon.webp" alt="Ice cannon"></li>
+        <li><img loading="lazy" src="/assets/img/launcher-steampunk.webp" alt="Copper steam cannon"></li>
+        <li><img loading="lazy" src="/assets/img/launcher-ballista.webp" alt="Giant crossbow"></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- WORK -->
+  <section class="work" id="work">
+    <div class="section-head reveal">
+      <p class="eyebrow">The work</p>
+      <h2>Projects</h2>
+    </div>
+    <div class="posters">
+      <a class="poster reveal" href="#topplonium">
+        <img loading="lazy" src="/assets/img/poster-topplonium.webp" alt="Topplonium: a red barn at golden hour">
+        <span><small>Game · Android · Coming soon</small><strong>Topplonium</strong></span>
+      </a>
+      <div class="poster poster-empty reveal"><span><small>Game</small><strong>Next title</strong><em>In development</em></span></div>
+      <div class="poster poster-empty reveal"><span><small>Apps</small><strong>Mobile apps</strong><em>Coming later</em></span></div>
+      <a class="poster poster-empty reveal" href="#contact"><span><small>Services</small><strong>IT consulting</strong><em>Get in touch</em></span></a>
+    </div>
+  </section>
+
+  <!-- STUDIO -->
+  <section class="studio" id="studio">
+    <div class="studio-bg" aria-hidden="true"><img loading="lazy" src="/assets/img/studio-icehall.webp" alt=""></div>
+    <div class="studio-copy reveal">
+      <p class="eyebrow">The studio</p>
+      <h2>Amazedsaints</h2>
+      <p>An independent studio making games, apps and software. We build worlds by hand, sweat the small things, and keep our games free of ads and tracking. Topplonium is the first. There is more to come.</p>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact" id="contact">
+    <div class="reveal">
+      <p class="eyebrow">Contact</p>
+      <h2>Say hello</h2>
+      <a class="mail" href="mailto:hello@amazedsaints.com">hello@amazedsaints.com</a>
+      <p class="contact-note">For press, partnerships, consulting, or to hear when Topplonium launches.</p>
+      <a class="btn btn-gold" href="mailto:hello@amazedsaints.com?subject=Notify%20me%3A%20Topplonium%20launch&body=Please%20let%20me%20know%20when%20Topplonium%20is%20on%20Google%20Play.">Notify me at launch</a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <span>© 2026 Amazedsaints</span>
+  <a href="/privacy">Privacy</a>
+</footer>
+
+<audio class="music" src="/assets/audio/barn-door-sunday.mp3" preload="none" loop></audio>
+<script src="/assets/site.js" defer></script>
+</body>
+</html>
