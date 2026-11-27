@@ -172,7 +172,8 @@ h2 {
 .fly { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; opacity: 0; transition: opacity .6s ease; filter: saturate(1.08) contrast(1.05); }
 .fly.ready { opacity: 1; }
 .hero-ui { position: absolute; inset: 0; z-index: 4; display: flex; align-items: center; will-change: opacity, transform; }
-.light-fade { height: 55vh; margin-top: -1px; background: linear-gradient(180deg, #fff0d6 0%, #f3cf95 18%, #6b4a2a 55%, var(--bg) 100%); }
+/* at the end of the fly-through the barn floor sinks into the dark page below */
+.hero-floor { position: absolute; left: 0; right: 0; bottom: 0; height: 46%; z-index: 2; opacity: 0; pointer-events: none; background: linear-gradient(0deg, var(--bg) 0%, rgba(7, 8, 11, .75) 35%, rgba(7, 8, 11, 0) 100%); }
 .motes { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
 .hero-shade {
   position: absolute; inset: 0; z-index: 2;

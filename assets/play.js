@@ -100,10 +100,12 @@
 
     const hit = (card, b) => {
       if (card.classList.contains("letter")) {      // a letter of the studio name: it jumps and lights up
-        const col = ["#FFB547", "#FF5E7E", "#B45CFF", "#3FB8FF", "#2EE6A8"][Math.floor(Math.random() * 5)];
         card.style.setProperty("--tilt", `${rand(-14, 14)}deg`);
+        // a hit letter keeps its colour until it is hit again (it then takes a different one)
+        const cols = ["#FFB547", "#FF5E7E", "#B45CFF", "#3FB8FF", "#2EE6A8"].filter(c2 => c2 !== card.dataset.col);
+        const col = cols[Math.floor(Math.random() * cols.length)];
+        card.dataset.col = col;
         card.style.color = col;
-        clearTimeout(card._t); card._t = setTimeout(() => { card.style.color = ""; }, 1800);
         card.classList.remove("hit"); void card.offsetWidth; card.classList.add("hit");
         const rgb = col.match(/\w\w/g).map(h => parseInt(h, 16)).join(", ");
         for (let i = 0; i < 18; i++) { const a = rand(0, 6.283), s = rand(80, 380); sparks.push({ x: b.x, y: b.y, vx: Math.cos(a) * s, vy: Math.sin(a) * s - 90, t: 0, life: rand(0.35, 0.8), c: rgb }); }

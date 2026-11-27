@@ -14,12 +14,13 @@
   const ui = document.querySelector(".hero-ui");
   const fly = document.querySelector(".fly");
   const shade = document.querySelector(".hero-shade");
+  const floor = document.querySelector(".hero-floor");
   const motesEl = document.querySelector(".motes");
   const FRAMES = 96;
   const set = matchMedia("(min-aspect-ratio: 1/1)").matches ? "wide" : "tall";
   const frames = new Array(FRAMES);
   let shown = -1, wanted = 0, fctx = null;
-  const src = i => `/assets/fly/${set}/${String(i).padStart(3, "0")}.webp`;
+  const src = i => `/assets/fly2/${set}/${String(i).padStart(3, "0")}.webp`;
   const sizeFly = () => {
     if (!fly) return;
     const dpr = Math.min(devicePixelRatio || 1, 2);
@@ -87,7 +88,9 @@
       // the dark shading behind the title lifts as the light takes over
       shade.style.opacity = (1 - Math.min(1, Math.max(0, (t - 0.1) / 0.45))).toFixed(3);
       if (motesEl) motesEl.style.opacity = (1 - Math.min(1, Math.max(0, (t - 0.6) / 0.3))).toFixed(3);
-      wanted = Math.round(Math.min(1, Math.max(0, (t - 0.04) / 0.94)) * (FRAMES - 1));
+      // the last frame (inside the barn) holds for the final stretch while its floor fades to the page
+      wanted = Math.round(Math.min(1, Math.max(0, (t - 0.04) / 0.84)) * (FRAMES - 1));
+      if (floor) floor.style.opacity = Math.min(1, Math.max(0, (t - 0.84) / 0.16)).toFixed(3);
       paint();
       phones.forEach(p => {
         const r = p.getBoundingClientRect();

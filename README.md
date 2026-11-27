@@ -12,9 +12,11 @@ Plain static files, no build step:
   `https://www.amazedsaints.com/privacy` in the Play Console)
 - `404.html`, `robots.txt`, `sitemap.xml`, `_headers` (Cloudflare Pages headers)
 - `assets/img/`: pictures from the game (WebP), `og.jpg` share image
-- `assets/fly/wide/` and `assets/fly/tall/`: the 96 frames of the hero
-  fly-through (the camera glides through the barn doors as you scroll),
-  made by `tools/flythrough.py` from the Golden Hills painting
+- `assets/fly2/wide/` and `assets/fly2/tall/`: the 96 frames of the hero
+  fly-through (the camera glides through the barn doors and into the barn
+  as you scroll), made by `tools/flythrough.py` from the paintings in
+  `art/` (the farm, and the barn's inside from the owner's Canva account).
+  When the frames change, write them to a new folder name (`fly3`, ...)
 - `assets/logo/mark.png`: the logo (1024 px, transparent)
 - `assets/img/poster-lumen-keeper-v2.webp`, `poster-paper-skies-v2.webp`,
   `poster-gravity-garden-v2.webp`: concept paintings generated in the owner's
