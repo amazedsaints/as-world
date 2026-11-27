@@ -300,9 +300,6 @@ h2 {
 .poster small { display: block; font-size: 10px; letter-spacing: .36em; text-transform: uppercase; color: var(--gold); }
 .poster strong { display: block; margin-top: 8px; font: 400 clamp(22px, 2.1vw, 30px)/1.1 var(--serif); letter-spacing: .05em; }
 .poster em { display: block; margin-top: 10px; font: 500 10px/1 var(--sans); letter-spacing: .34em; text-transform: uppercase; color: var(--dim); }
-.poster-concept em { text-transform: none; letter-spacing: .01em; font: 400 13px/1.5 var(--sans); color: #c9c2b7; max-height: 0; opacity: 0; overflow: hidden; transition: max-height .6s ease, opacity .6s ease, margin .6s ease; margin-top: 0; }
-.poster-concept:hover em, .poster-concept:focus-within em { max-height: 120px; opacity: 1; margin-top: 10px; }
-@media (hover: none) { .poster-concept em { max-height: 120px; opacity: 1; margin-top: 10px; } }
 
 /* ---------- studio ---------- */
 .studio { position: relative; overflow: hidden; padding: clamp(110px, 20vh, 220px) var(--gutter); }
